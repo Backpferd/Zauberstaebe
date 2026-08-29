@@ -1,0 +1,105 @@
+# Neues Buch. Pflichtfelder: titel, autor. Alles andere hat sinnvolle Vorgaben.
+# Vollstaendige Feldreferenz: docs/03-buch-yaml.md
+
+titel: "Titel des Buches"
+untertitel: "Untertitel – bei Amazon eines der wichtigsten Suchfelder, nicht leer lassen"
+autor: "Dein Name"
+reihe: ""
+reihennummer:
+sprache: de
+
+druck:
+  trim: "8.5x8.5"           # kdp: Liste aller Formate in docs/02-kdp-spezifikationen.md
+  papier: "farbe-premium"
+  anschnitt: true
+  seiten_soll: 32
+
+zielgruppe:
+  alter: [4, 7]
+  klassenstufe: ""
+
+layout:
+  vorspann: [titelseite, impressum]
+  nachspann: []
+  schriftgroesse: 17
+  zeilenabstand: 1.5
+  ausrichtung: links
+  textfarbe: "#2B2A33"
+  seitenfarbe: "#FFFFFF"
+  bildanteil: 0.62
+  seitenzahlen: false
+  raender: {aussen: 0.55, oben: 0.55, unten: 0.55}
+
+illustration:
+  stil:
+    technik: "handgemalte Kinderbuchillustration, weiche Aquarellfarben"
+    linien: "weiche, leicht unregelmäßige Konturen, keine harten Vektorkanten"
+    palette: "warme Palette: Honiggelb, Moosgrün, Abendblau, gebrochenes Weiß"
+    licht: "weiches, seitliches Nachmittagslicht"
+    stimmung: "freundlich und geborgen"
+    perspektive: "auf Augenhöhe eines Kindes"
+  figuren:
+    - name: "Hauptfigur"
+      beschreibung: "Alter, Statur, Haare, Augen, Gesicht – so genau wie möglich"
+      kleidung: "immer dieselbe Kleidung, sonst wechselt sie von Bild zu Bild"
+      merkmal: "ein einzelnes unverwechselbares Detail"
+
+cover:
+  front_bild: "cover-front.png"
+  front_szene: "die Hauptfigur in der zentralen Szene des Buches"
+  rueck_bild: "cover-rueck.png"
+  rueck_szene: "ruhiger, kontrastarmer Ausschnitt der Buchwelt"
+  hintergrundfarbe: "#1B2A4A"
+  schriftfarbe: "#FFFFFF"
+  akzentfarbe: "#F2C14E"
+  rueck_headline: ""
+  blurb: |-
+    Erster Absatz: die Ausgangslage in zwei Sätzen.
+
+    Zweiter Absatz: das Problem.
+
+    Dritter Absatz: der Haken, der zum Kauf führt – ohne das Ende zu verraten.
+  stichpunkte: []
+
+marketing:
+  hook: "Eine Frage oder ein Satz, der die Zielgruppe sofort abholt"
+  beschreibung: []
+  argumente_ueberschrift: "Warum dieses Buch gut ins Regal passt"
+  verkaufsargumente: []
+  seitenangabe: "32 Seiten, durchgehend farbig illustriert"
+  leseart: "Zum Vorlesen ab 4 Jahren"
+  abschluss: ""
+  kurzbeschreibung: "Ein Satz für Rückseite und Metadaten."
+  keywords: []          # genau 7, je max. 50 Zeichen
+  kategorien: []        # bis zu 3
+
+preise:
+  - {markt: DE, waehrung: EUR, mwst_satz: 0.07, taschenbuch: 12.99, ebook: 4.99}
+  - {markt: US, waehrung: USD, mwst_satz: 0.0,  taschenbuch: 14.99, ebook: 4.99}
+
+ebook:
+  layout: fest          # fest = Bilderbuch, fliessend = Kapitelbuch
+  viewport_breite: 1600
+
+impressum:
+  jahr: 2026
+  rechteinhaber: "Dein Name"
+  auflage: "1. Auflage"
+  verlagsname: ""
+  illustration: ""
+  isbn: ""
+  verantwortlich: |-
+    Name
+    Straße Nr.
+    PLZ Ort
+    Land
+    kontakt@beispiel.de
+  hinweis: "Gedruckt und vertrieben von Amazon."
+
+ki_einsatz:
+  text: "KI-unterstützt"
+  text_hinweis: ""
+  bilder: "KI-generiert"
+  bilder_hinweis: ""
+  uebersetzung: "nein"
+  hinweis_im_buch: ""

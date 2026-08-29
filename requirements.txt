@@ -1,0 +1,4 @@
+# Python 3.10 oder neuer
+Pillow>=10.0        # Bildprüfung, Skalierung, Platzhalter, eBook-Cover
+reportlab>=4.0      # Innenteil- und Cover-PDF
+PyYAML>=6.0         # buch.yaml und konfig/

@@ -1,0 +1,63 @@
+# Druckkosten und Tantiemen-Parameter fuer die Kalkulation.
+#
+# ACHTUNG: Amazon aendert diese Werte gelegentlich. Vor der ersten
+# Veroeffentlichung EINMAL gegenpruefen und "stand" hier hochsetzen:
+#   https://kdp.amazon.com/help/topic/G201834340   (Druckkosten)
+#   https://kdp.amazon.com/help/topic/G200634500   (Tantiemen Taschenbuch)
+#   https://kdp.amazon.com/help/topic/G200634560   (Tantiemen eBook)
+#
+# Die Kalkulation gibt dieses Datum bei jedem Lauf mit aus, damit man merkt,
+# wenn die Zahlen alt sind.
+stand: "2026-08-29"
+geprueft_von: "noch nicht gegengeprueft - bitte einmal verifizieren"
+
+# Tantiemen-Saetze
+tantieme:
+  taschenbuch: 0.60          # 60 % vom Nettolistenpreis minus Druckkosten
+  ebook_hoch: 0.70           # 70 % im Preisfenster
+  ebook_niedrig: 0.35
+  ebook_fenster:             # Preisfenster fuer 70 %, in Listenpreis inkl. MwSt.
+    EUR: [2.99, 9.99]
+    USD: [2.99, 9.99]
+    GBP: [1.99, 9.99]
+  # Bei 70 % zieht Amazon Uebertragungskosten pro MB ab (nur eBook).
+  uebertragung_pro_mb:
+    EUR: 0.12
+    USD: 0.15
+    GBP: 0.10
+
+# Buch-Mehrwertsteuer im jeweiligen Markt (Tantieme rechnet auf netto).
+mwst:
+  DE: 0.07
+  US: 0.0
+  UK: 0.0
+
+# Druckkosten. Formel: fix + pro_seite * seiten
+# "grenze" trennt zwei Staffeln (z.B. bis 108 Seiten Pauschale).
+druckkosten:
+  DE:
+    waehrung: EUR
+    sw-weiss:
+      - {bis_seiten: 108, fix: 2.05, pro_seite: 0.0}
+      - {bis_seiten: 828, fix: 0.0,  pro_seite: 0.011}
+    sw-creme:
+      - {bis_seiten: 108, fix: 2.05, pro_seite: 0.0}
+      - {bis_seiten: 828, fix: 0.0,  pro_seite: 0.011}
+    farbe-standard:
+      - {bis_seiten: 108, fix: 3.25, pro_seite: 0.0}
+      - {bis_seiten: 828, fix: 0.0,  pro_seite: 0.0230}
+    farbe-premium:
+      - {bis_seiten: 828, fix: 0.60, pro_seite: 0.0700}
+  US:
+    waehrung: USD
+    sw-weiss:
+      - {bis_seiten: 108, fix: 2.30, pro_seite: 0.0}
+      - {bis_seiten: 828, fix: 0.0,  pro_seite: 0.012}
+    sw-creme:
+      - {bis_seiten: 108, fix: 2.30, pro_seite: 0.0}
+      - {bis_seiten: 828, fix: 0.0,  pro_seite: 0.012}
+    farbe-standard:
+      - {bis_seiten: 108, fix: 3.60, pro_seite: 0.0}
+      - {bis_seiten: 828, fix: 0.0,  pro_seite: 0.0255}
+    farbe-premium:
+      - {bis_seiten: 828, fix: 0.85, pro_seite: 0.0850}

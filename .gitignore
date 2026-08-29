@@ -1,0 +1,5 @@
+# Build-Ergebnisse werden neu erzeugt, nicht versioniert.
+buecher/*/build/
+__pycache__/
+*.pyc
+.DS_Store

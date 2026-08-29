@@ -1,0 +1,158 @@
+# ---------------------------------------------------------------------------
+# Beispielbuch. Alle Felder sind in docs/02-buch-yaml.md erklaert.
+# ---------------------------------------------------------------------------
+
+titel: "Der Zauberstab, der nicht zaubern wollte"
+untertitel: "Eine Vorlesegeschichte über Mut, Geduld und den eigenen Weg"
+autor: "Marc Becker"
+reihe: "Die Werkstatt von Großvater Anselm"
+reihennummer: 1
+sprache: de
+
+druck:
+  trim: "8.5x8.5"          # quadratisches Bilderbuchformat
+  papier: "farbe-premium"  # Bilderbuch = Premiumfarbe, alles andere sieht billig aus
+  anschnitt: true          # randabfallende Bilder
+  seiten_soll: 32
+
+zielgruppe:
+  alter: [4, 7]
+  klassenstufe: "Vorschule bis 2. Klasse"
+
+layout:
+  vorspann: [titelseite, impressum]
+  nachspann:
+    - ueberschrift: "Zum Weiterreden"
+      absaetze:
+        - "Nicht jedes Kind zeigt sofort, was in ihm steckt. Diese Geschichte erzählt von einem Mädchen, dessen Begabung erst sichtbar wird, als jemand anders sie braucht."
+        - "**Fragen nach dem Vorlesen:** Was kann Miras Zauberstab? Warum funktioniert er beim Stabfest nicht? Kennst du etwas, das du gut kannst, das aber niemand sieht? Wem hast du zuletzt geholfen?"
+        - "**Kleine Übung:** Lasst euer Kind einen eigenen Zauberstab beschreiben – aus welchem Holz, mit welcher Feder, und für wen er gemacht wäre."
+  schriftgroesse: 17
+  zeilenabstand: 1.5
+  ausrichtung: links
+  textfarbe: "#2B2A33"
+  seitenfarbe: "#FFFDF8"
+  bildanteil: 0.62
+  textband_deckkraft: 0.86
+  seitenzahlen: false
+  raender:
+    aussen: 0.55
+    oben: 0.55
+    unten: 0.55
+
+illustration:
+  stil:
+    technik: "handgemalte Kinderbuchillustration, weiche Aquarellfarben mit sichtbarer Buntstiftstruktur, leicht körniges Papier"
+    linien: "weiche, leicht unregelmäßige Konturen, keine harten Vektorkanten, keine 3D-Optik"
+    palette: "warme Herbstpalette: Honiggelb, Moosgrün, Rostrot, Abendblau, gebrochenes Weiß"
+    licht: "warmes, tiefstehendes Licht; nachts ein einzelner goldener Lichtkegel"
+    stimmung: "geborgen, leise magisch, nie gruselig"
+    perspektive: "auf Augenhöhe eines Kindes, viel sichtbare Umgebung"
+    zusatz: "im Stil klassischer europäischer Bilderbücher der 1980er Jahre"
+  figuren:
+    - name: "Mira"
+      beschreibung: "siebenjähriges Mädchen, schmal, dunkelbraune Haare in zwei Zöpfen, Sommersprossen über der Nase, wache dunkle Augen"
+      kleidung: "senfgelber Strickpullover, dunkelblaue Latzhose, rote Gummistiefel"
+      merkmal: "trägt immer ein grünes Haarband am linken Zopf"
+    - name: "Großvater Anselm"
+      beschreibung: "alter Mann, groß und leicht gebeugt, weißer Vollbart, runde Drahtbrille, freundliche Falten"
+      kleidung: "braune Lederschürze über kariertem Hemd, hochgekrempelte Ärmel"
+      merkmal: "hat immer einen Bleistift hinter dem rechten Ohr"
+    - name: "Sturm"
+      beschreibung: "sehr junger Waldkauz, flauschig, viel zu große dunkle Augen, unproportionierter Kopf"
+      kleidung: "keine"
+      merkmal: "eine hellere Federzeichnung über dem linken Auge, wie eine hochgezogene Augenbraue"
+
+cover:
+  front_bild: "cover-front.png"
+  front_szene: "Mira steht nachts im Regen auf dem Dorfplatz und hält ihren leuchtenden Zauberstab hoch; auf ihrer Schulter der kleine Waldkauz; der warme Lichtkegel fällt auf ihr staunendes Gesicht"
+  rueck_bild: "cover-rueck.png"
+  rueck_szene: "die dunkle Werkstatt von außen durchs Fenster gesehen, hunderte Zauberstäbe in Regalen, sehr ruhig und kontrastarm"
+  hintergrundfarbe: "#1B2A4A"
+  rueckenfarbe: "#1B2A4A"
+  schriftfarbe: "#FFFFFF"
+  akzentfarbe: "#F2C14E"
+  titelband: true
+  titelband_deckkraft: 0.40
+  rueck_headline: "Manche Zauberstäbe brauchen etwas länger."
+  blurb: |-
+    Morgen ist Stabfest. Morgen bekommt jedes Kind im Dorf seinen eigenen Zauberstab. Mira kann kaum schlafen vor Vorfreude.
+
+    Doch als sie ihren Stab endlich in den Händen hält – helle Buche, elf Zoll, eine winzige Eulenfeder am Griff –, passiert nichts. Kein Funke. Keine Blüte. Gar nichts.
+
+    Bis in einer stürmischen Nacht jemand ihre Hilfe braucht. Und Mira begreift, dass ihr Zauberstab die ganze Zeit auf genau diesen Moment gewartet hat.
+  stichpunkte:
+    - "Warmherzige Vorlesegeschichte für Kinder von 4 bis 7 Jahren"
+    - "26 großformatige Illustrationen"
+    - "Mit Gesprächsfragen zum Weiterreden am Schluss"
+
+marketing:
+  hook: "Was, wenn dein Zauberstab einfach nicht zaubern will?"
+  beschreibung:
+    - "Morgen ist Stabfest. Morgen bekommt jedes Kind im Dorf seinen eigenen Zauberstab – und Mira kann vor Vorfreude kaum schlafen."
+    - "Doch als sie ihren Stab endlich in den Händen hält, helle Buche mit einer winzigen Eulenfeder am Griff, passiert nichts. Bei Jonas springen Funken. Bei Elif regnet es Blüten. Bei Mira: gar nichts. Nach vierzehn Tagen legt sie den Stab ganz nach hinten in die Schublade."
+    - "Bis in einer stürmischen Herbstnacht ein Piepsen im Wind sie aus dem Schlaf holt. Draußen ist es stockdunkel, und Mira hat nichts – außer einem Zauberstab, an den sie längst nicht mehr glaubt."
+    - "*Der Zauberstab, der nicht zaubern wollte* ist eine ruhige, warmherzige Vorlesegeschichte für Kinder, die noch nicht wissen, was in ihnen steckt. Sie erzählt davon, dass Begabung nicht immer laut ist – und dass manche Stärken erst sichtbar werden, wenn jemand anders sie braucht."
+  argumente_ueberschrift: "Warum dieses Buch gut ins Regal passt"
+  verkaufsargumente:
+    - "**Ideal zum Vorlesen:** kurze Textmengen pro Seite, ruhiger Rhythmus, klarer Spannungsbogen – etwa 12 Minuten Vorlesezeit"
+    - "**Ermutigt leise Kinder:** die Heldin ist keine Draufgängerin, sondern ein Kind, das zuhört und hilft"
+    - "**26 großformatige Illustrationen** in warmen Herbstfarben, gemalt im Stil klassischer Bilderbücher"
+    - "**Mit Gesprächsfragen am Schluss** – für Eltern, Kita und die erste Klasse"
+    - "**Ein schönes Geschenk** zur Einschulung, zum Geburtstag oder als Gute-Nacht-Buch"
+  seitenangabe: "32 Seiten, durchgehend farbig illustriert"
+  leseart: "Zum Vorlesen ab 4 Jahren, zum Selberlesen ab 7 Jahren"
+  abschluss: "Manche Zauberstäbe brauchen eben etwas länger."
+  kurzbeschreibung: "Mira bekommt endlich ihren eigenen Zauberstab – doch der zaubert einfach nicht. Bis in einer Sturmnacht jemand ihre Hilfe braucht."
+  keywords:
+    - "Kinderbuch ab 4 Jahren zum Vorlesen"
+    - "Bilderbuch Mut und Selbstvertrauen"
+    - "Gute Nacht Geschichte Vorlesebuch"
+    - "Zauberer Magie Fantasie Kinderzimmer"
+    - "Geschenk Einschulung Kindergartenkind"
+    - "Anderssein Akzeptanz leise Kinder"
+    - "Eule Waldtiere Herbst Abenteuer"
+  kategorien:
+    - "JUVENILE FICTION / Fantasy & Magic"
+    - "JUVENILE FICTION / Social Themes / Self-Esteem & Self-Reliance"
+    - "JUVENILE FICTION / Animals / Birds"
+
+preise:
+  - markt: DE
+    waehrung: EUR
+    mwst_satz: 0.07
+    taschenbuch: 12.99
+    ebook: 4.99
+  - markt: US
+    waehrung: USD
+    mwst_satz: 0.0
+    taschenbuch: 14.99
+    ebook: 4.99
+
+ebook:
+  layout: fest          # Bilderbuch -> Fixed Layout
+  viewport_breite: 1600
+
+impressum:
+  jahr: 2026
+  rechteinhaber: "Marc Becker"
+  auflage: "1. Auflage"
+  verlagsname: "Werkstatt-Verlag"
+  illustration: "Marc Becker (KI-gestützt erstellt und überarbeitet)"
+  isbn: ""             # leer = kostenlose KDP-ISBN verwenden
+  verantwortlich: |-
+    Marc Becker
+    Musterstraße 1
+    12345 Musterstadt
+    Deutschland
+    kontakt@beispiel.de
+  hinweis: "Gedruckt und vertrieben von Amazon."
+
+# Pflichtangabe beim KDP-Upload. Ehrlich ausfüllen.
+ki_einsatz:
+  text: "KI-unterstützt"
+  text_hinweis: "Entwurf mit KI erstellt, vollständig redigiert und umgeschrieben"
+  bilder: "KI-generiert"
+  bilder_hinweis: "Bilder mit KI erzeugt, Auswahl und Nachbearbeitung durch den Autor"
+  uebersetzung: "nein"
+  hinweis_im_buch: "Die Illustrationen dieses Buches wurden mit Hilfe generativer KI erstellt und vom Autor ausgewählt und überarbeitet."
