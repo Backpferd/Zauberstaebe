@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920">
+<title>Zauberstäbe – Konzeptszene</title>
+<link rel="stylesheet" href="node_modules/@fontsource/cinzel/latin-600.css">
+<link rel="stylesheet" href="node_modules/@fontsource/cinzel/latin-700.css">
+<link rel="stylesheet" href="node_modules/@fontsource/alegreya/latin-400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/alegreya/latin-400-italic.css">
+<link rel="stylesheet" href="node_modules/@fontsource/alegreya/latin-700.css">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "./node_modules/three/build/three.module.js",
+  "three/addons/": "./node_modules/three/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="app">
+  <canvas id="c"></canvas>
+  <div id="vignette"></div>
+  <div id="world-ui"></div>
+
+  <div id="hud">
+    <!-- Buffs oben links -->
+    <div class="buffs">
+      <div class="buff blue">
+        <svg viewBox="0 0 64 64"><defs><radialGradient id="bf1"><stop offset="0" stop-color="#1e5a6a"/><stop offset="1" stop-color="#071a20"/></radialGradient></defs>
+          <rect width="64" height="64" fill="url(#bf1)"/>
+          <path d="M32 8 L50 15 V30 C50 43 41 52 32 56 C23 52 14 43 14 30 V15 Z" fill="#123640" stroke="#e2c47a" stroke-width="3"/>
+          <path d="M32 18 V46 M32 24 L40 30 M32 34 L24 40" stroke="#9ff0ff" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg>
+        <span>8s</span>
+      </div>
+      <div class="buff gold">
+        <svg viewBox="0 0 64 64"><defs><radialGradient id="bf2"><stop offset="0" stop-color="#6a3a10"/><stop offset="1" stop-color="#1c0d04"/></radialGradient></defs>
+          <rect width="64" height="64" fill="url(#bf2)"/>
+          <path d="M32 54 C18 50 16 38 22 30 C23 36 27 38 28 36 C24 26 30 16 36 10 C36 20 46 24 46 36 C46 46 40 52 32 54 Z" fill="#ffb03a" stroke="#ffe7a0" stroke-width="2"/></svg>
+        <span>Glut</span>
+      </div>
+      <div class="buff red">
+        <svg viewBox="0 0 64 64"><defs><radialGradient id="bf3"><stop offset="0" stop-color="#5a1010"/><stop offset="1" stop-color="#180404"/></radialGradient></defs>
+          <rect width="64" height="64" fill="url(#bf3)"/>
+          <path d="M14 46 L24 22 L30 34 L36 18 L50 46" stroke="#ff7a6a" stroke-width="4" fill="none" stroke-linejoin="round"/>
+          <circle cx="24" cy="22" r="3" fill="#ffd0c8"/><circle cx="36" cy="18" r="3" fill="#ffd0c8"/></svg>
+        <span>Rudelruf</span>
+      </div>
+    </div>
+    <div class="build-tag">Konzeptszene · Echtzeit-3D im Browser · alles aus Code erzeugt</div>
+
+    <!-- Elite-/Bossleiste -->
+    <div class="bossbar">
+      <div class="boss-name">Grimmzahn, der Rudelführer</div>
+      <div class="boss-hp"><div class="fill" style="width:78%"></div><div class="boss-hp-text">78 %</div></div>
+      <div class="boss-mods">Rasend · Rudelruf · Dornenfell</div>
+    </div>
+
+    <!-- Minikarte -->
+    <div class="minimap-wrap">
+      <div id="minimap"></div>
+      <div class="zone">Das Wildholz<small>Wolfslichtung · Gebietsstufe 7</small></div>
+    </div>
+
+    <!-- Quests -->
+    <div class="quests">
+      <div class="quest">
+        <div class="q-title">Der Zauberstabmacher</div>
+        <div class="q-step done"><span class="dia">◆</span>Wargzähne sammeln <b>2/3</b></div>
+        <div class="q-step"><span class="dia">◆</span>Grimmzahn erlegen</div>
+      </div>
+    </div>
+
+    <!-- Untere Leiste -->
+    <div class="panel"></div>
+    <div class="orb hp">
+      <div class="liquid" style="height:72%"></div><div class="glass"></div>
+      <div class="orb-text">412<small>/ 570</small></div>
+    </div>
+    <div class="orb mp">
+      <div class="liquid" style="height:56%"></div><div class="glass"></div>
+      <div class="orb-text">128<small>/ 230</small></div>
+    </div>
+
+    <div class="xpbar"><div class="fill" style="width:62%"></div><span>Stufe 7 · 62 %</span></div>
+
+    <div class="skillbar">
+      <div class="slot active" title="Feuerball">
+        <svg viewBox="0 0 64 64"><defs>
+          <radialGradient id="s1bg" cx="50%" cy="45%" r="70%"><stop offset="0" stop-color="#5a1a08"/><stop offset="1" stop-color="#140504"/></radialGradient>
+          <radialGradient id="s1fb" cx="40%" cy="38%" r="62%"><stop offset="0" stop-color="#fff6c0"/><stop offset=".35" stop-color="#ffc23a"/><stop offset=".75" stop-color="#ff5a12"/><stop offset="1" stop-color="#a01806"/></radialGradient></defs>
+          <rect width="64" height="64" fill="url(#s1bg)"/>
+          <path d="M6 58 C 16 46, 22 40, 30 32" fill="none" stroke="#ff7a1a" stroke-width="7" stroke-linecap="round" opacity=".55"/>
+          <path d="M10 46 C 18 41, 23 37, 28 31" stroke="#ffb03a" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>
+          <path d="M20 58 C 26 50, 30 44, 34 36" stroke="#ff9a2a" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>
+          <circle cx="38" cy="26" r="15" fill="url(#s1fb)"/></svg>
+        <kbd>LMT</kbd>
+      </div>
+      <div class="slot cd" title="Frostnova" data-cd="2">
+        <svg viewBox="0 0 64 64"><defs><radialGradient id="s2bg"><stop offset="0" stop-color="#1b4a6a"/><stop offset="1" stop-color="#06121c"/></radialGradient></defs>
+          <rect width="64" height="64" fill="url(#s2bg)"/>
+          <g stroke="#bff0ff" stroke-width="3" stroke-linecap="round" fill="none" transform="translate(32 32)">
+            <g id="s2arm"><path d="M0 0 V-23 M0 -11 L-6 -17 M0 -11 L6 -17 M0 -18 L-4 -22 M0 -18 L4 -22"/></g>
+            <use href="#s2arm" transform="rotate(60)"/><use href="#s2arm" transform="rotate(120)"/>
+            <use href="#s2arm" transform="rotate(180)"/><use href="#s2arm" transform="rotate(240)"/><use href="#s2arm" transform="rotate(300)"/>
+          </g><circle cx="32" cy="32" r="5" fill="#e8fbff"/></svg>
+        <kbd>RMT</kbd>
+      </div>
+      <div class="slot" title="Kettenblitz">
+        <svg viewBox="0 0 64 64"><defs><radialGradient id="s3bg"><stop offset="0" stop-color="#3a1a5a"/><stop offset="1" stop-color="#0e0518"/></radialGradient></defs>
+          <rect width="64" height="64" fill="url(#s3bg)"/>
+          <polygon points="38,4 18,34 30,34 22,60 48,24 35,24 44,4" fill="#fff3a0" stroke="#c9a2ff" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M44 34 L54 40 L50 44 L58 52" stroke="#d9c2ff" stroke-width="2" fill="none"/></svg>
+        <kbd>Q</kbd>
+      </div>
+      <div class="slot" title="Runenschild">
+        <svg viewBox="0 0 64 64"><defs><radialGradient id="s4bg"><stop offset="0" stop-color="#1e5a6a"/><stop offset="1" stop-color="#071a20"/></radialGradient></defs>
+          <rect width="64" height="64" fill="url(#s4bg)"/>
+          <path d="M32 7 L52 15 V31 C52 45 42 54 32 58 C22 54 12 45 12 31 V15 Z" fill="#123640" stroke="#e2c47a" stroke-width="3"/>
+          <path d="M32 18 V47 M32 24 L41 30 M32 35 L23 41" stroke="#9ff0ff" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg>
+        <kbd>E</kbd>
+      </div>
+      <div class="slot cd" title="Meteor" data-cd="23">
+        <svg viewBox="0 0 64 64"><defs><radialGradient id="s5bg"><stop offset="0" stop-color="#4a1406"/><stop offset="1" stop-color="#120402"/></radialGradient>
+          <radialGradient id="s5rk" cx="40%" cy="40%"><stop offset="0" stop-color="#ffd27a"/><stop offset=".5" stop-color="#c2410c"/><stop offset="1" stop-color="#3a1206"/></radialGradient></defs>
+          <rect width="64" height="64" fill="url(#s5bg)"/>
+          <path d="M4 4 L34 34" stroke="#ff8a2a" stroke-width="12" stroke-linecap="round" opacity=".45"/>
+          <path d="M10 6 L36 32" stroke="#ffd06a" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+          <polygon points="30,30 44,26 54,36 50,50 36,54 26,44" fill="url(#s5rk)" stroke="#1a0804" stroke-width="2"/></svg>
+        <kbd>R</kbd>
+      </div>
+      <div class="slot" title="Ausweichrolle">
+        <svg viewBox="0 0 64 64"><defs><radialGradient id="s6bg"><stop offset="0" stop-color="#2e4a2a"/><stop offset="1" stop-color="#0a140a"/></radialGradient></defs>
+          <rect width="64" height="64" fill="url(#s6bg)"/>
+          <path d="M14 44 C 18 22, 40 14, 50 26" stroke="#d8f0b0" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M46 16 L52 28 L40 30" stroke="#d8f0b0" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 54 H 40" stroke="#8ab070" stroke-width="3" stroke-linecap="round" opacity=".7"/></svg>
+        <kbd>Leer</kbd>
+      </div>
+      <div class="sep"></div>
+      <div class="slot flask" title="Heiltrank">
+        <svg viewBox="0 0 64 64"><defs><linearGradient id="f1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6a5a"/><stop offset="1" stop-color="#7a0a0a"/></linearGradient>
+          <clipPath id="f1c"><path d="M26 10 h12 v12 c9 4 14 12 14 21 a20 20 0 0 1 -40 0 c0 -9 5 -17 14 -21 z"/></clipPath></defs>
+          <rect width="64" height="64" fill="#120c08"/>
+          <rect x="0" y="30" width="64" height="40" fill="url(#f1)" clip-path="url(#f1c)"/>
+          <path d="M26 10 h12 v12 c9 4 14 12 14 21 a20 20 0 0 1 -40 0 c0 -9 5 -17 14 -21 z" fill="none" stroke="#d8c8a0" stroke-width="2.5"/>
+          <rect x="24" y="5" width="16" height="6" rx="2" fill="#7a5530"/></svg>
+        <kbd>1</kbd>
+        <div class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+      </div>
+      <div class="slot flask" title="Manatrank">
+        <svg viewBox="0 0 64 64"><defs><linearGradient id="f2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6aa8ff"/><stop offset="1" stop-color="#0a2a7a"/></linearGradient>
+          <clipPath id="f2c"><path d="M26 10 h12 v12 c9 4 14 12 14 21 a20 20 0 0 1 -40 0 c0 -9 5 -17 14 -21 z"/></clipPath></defs>
+          <rect width="64" height="64" fill="#080a12"/>
+          <rect x="0" y="36" width="64" height="40" fill="url(#f2)" clip-path="url(#f2c)"/>
+          <path d="M26 10 h12 v12 c9 4 14 12 14 21 a20 20 0 0 1 -40 0 c0 -9 5 -17 14 -21 z" fill="none" stroke="#d8c8a0" stroke-width="2.5"/>
+          <rect x="24" y="5" width="16" height="6" rx="2" fill="#7a5530"/></svg>
+        <kbd>2</kbd>
+        <div class="pips"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tooltip des seltenen Stabs (wird per JS neben dem Beute-Schild platziert) -->
+  <div id="tooltip" class="tooltip">
+    <div class="tt-head">Glutdorn<br>Eichenstab</div>
+    <div class="tt-sec">
+      <div><span class="k">Kern:</span> <span class="v">Adlerfeder</span> <span class="k">·</span> <span class="v">14 Zoll</span></div>
+      <div><span class="k">Zauberkraft:</span> <span class="v">24–41</span></div>
+      <div><span class="k">Zaubertempo:</span> <span class="v">1,10 / s</span></div>
+      <div><span class="k">Reichweite:</span> <span class="v">lang</span></div>
+    </div>
+    <div class="tt-sec implicit">+30 % Geschossgeschwindigkeit</div>
+    <div class="tt-sec mods">
+      <div>+18 % Feuerschaden</div>
+      <div>+34 maximales Mana</div>
+      <div>+12 % kritische Trefferchance für Zauber</div>
+      <div>Geschosse durchbohren 1 weiteren Gegner</div>
+    </div>
+    <div class="tt-sec">
+      <div class="sockets">
+        <span class="socket red"></span><span class="link"></span><span class="socket blue"></span><span class="link"></span><span class="socket empty"></span>
+      </div>
+      <div class="socket-names">Feuerball · Mehrfachgeschoss · <i>leer</i></div>
+    </div>
+    <div class="tt-sec flavor">„Der geeignete Zauberstab für jemanden<br>mit Stärke und Integrität.“</div>
+    <div class="tt-foot">Benötigt Stufe 6 · 24 Int</div>
+  </div>
+
+  <div id="cursor">
+    <svg viewBox="0 0 40 48" width="34" height="41"><defs><linearGradient id="cur" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".55" stop-color="#c9952f"/><stop offset="1" stop-color="#6b4512"/></linearGradient></defs>
+      <path d="M3 2 L34 22 L20 25 L27 41 L20 44 L13 28 L4 37 Z" fill="url(#cur)" stroke="#1a0f04" stroke-width="2.5" stroke-linejoin="round"/></svg>
+  </div>
+</div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
