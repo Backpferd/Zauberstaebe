@@ -1,0 +1,587 @@
+/* ===========================================================================
+   VARIANTE C — „WILDHOLZ“
+   Stilleitfaden für die Oberfläche von „Zauberstäbe“
+   Eigene Mischung: die Wärme und Lesbarkeit von WoW Classic, die Ruhe und
+   Bildfreiheit von Diablo IV – und zwei Entscheidungen, die nur hier gelten:
+
+   A) SECHSECK STATT QUADRAT.  Jedes anfassbare Feld – Zauber, Trank, Stufe,
+      Minikarte, Zustand – ist ein Sechseck. Alles, was nur Zustand anzeigt –
+      Balken, Zeilen, Fenster – bleibt gerade, bekommt aber abgeschrägte
+      Enden. Dadurch erkennt man ohne Hinsehen, was ein Knopf ist.
+   B) PERGAMENT STATT SCHWARZGLAS.  Jedes Fenster, das man in Ruhe liest
+      (Inventar, Schriftrolle, Wegweiser), ist heller Pergamentgrund mit
+      dunkler Tinte. Das Spiel-HUD bleibt dunkel. Diese Umkehrung trennt
+      „jetzt kämpfen“ und „jetzt lesen“ sofort voneinander.
+
+   Deshalb gibt es zwei Seltenheitssätze: einen für dunklen Grund (HUD, Welt)
+   und einen für Pergament. Nie den falschen benutzen.
+   Alle Kontrastwerte sind gemessen (WCAG 2.1) und liegen über 4,5:1.
+   =========================================================================== */
+
+:root {
+  /* --- dunkle Seite: HUD und Welt ---------------------------------------- */
+  --tinte:        #0E1310;  /* dunkelster Grund, Fläche hinter Balken         */
+  --moos:         #1B2A20;  /* HUD-Flächen, Zustandsplaketten                 */
+  --moos-hell:    #273B2D;  /* Hervorhebung                                   */
+  --glas:         rgba(14,19,16,.80);
+  --glas-leicht:  rgba(14,19,16,.58);
+
+  /* --- helle Seite: Pergamentfenster ------------------------------------- */
+  --pergament:      #EFE3C8;
+  --pergament-tief: #E3D4B2;  /* Vertiefungen, leere Plätze                   */
+  --pergament-kante:#C3B189;  /* feine Trennlinie auf Pergament, nie Text     */
+  --rand-dunkel:    #1B2A20;  /* Außenrahmen der Pergamentfenster, 2 px       */
+
+  /* --- Schrift auf dunklem Grund ----------------------------------------- */
+  --creme:        #F2EADA;  /* 15,7:1 auf --tinte · 12,6:1 auf --moos         */
+  --creme-leise:  #B6AE9A;  /*  8,5:1 auf --tinte                             */
+  --creme-sehr-leise: #8A8474; /* nur Nebenangaben                            */
+
+  /* --- Schrift auf Pergament --------------------------------------------- */
+  --tinte-text:   #241C12;  /* 13,2:1 auf --pergament                         */
+  --tinte-leise:  #5A4C38;  /*  6,5:1 auf --pergament                         */
+
+  /* --- die zwei Akzente. Mehr gibt es nicht. ----------------------------- */
+  --glut:         #FF9A3C;  /*  8,9:1 auf --tinte  — warm: Feuer, Beute, aktiv*/
+  --glut-tinte:   #8A3B10;  /*  6,1:1 auf Pergament — dieselbe Rolle, dunkel  */
+  --rune:         #7FE0D2;  /* 12,1:1 auf --tinte  — kalt: Magie, Frost, Mana */
+  --rune-tinte:   #135E68;  /*  5,8:1 auf Pergament                           */
+
+  /* --- Zustandsfarben ----------------------------------------------------- */
+  --leben:        #A32F1E;
+  --leben-hell:   #D1452F;
+  --mana:         #1F6E7A;
+  --mana-hell:    #2F9AA8;
+  --ep:           #7A6A2A;
+  --ep-hell:      #C9AE48;
+  --feind:        #9E2B1C;
+  --feind-hell:   #D1452F;
+
+  /* --- Seltenheiten AUF DUNKLEM GRUND (HUD, Welt, Beuteschilder) --------- */
+  --selt-gewoehnlich: #E4DAC4; /* 13,5:1 */
+  --selt-magisch:     #7FC6E8; /*  9,9:1 */
+  --selt-selten:      #F2C64E; /* 11,6:1 */
+  --selt-einzigartig: #FF8A3C; /*  8,0:1 */
+
+  /* --- Seltenheiten AUF PERGAMENT (Inventar, Tooltip) -------------------- */
+  --selt-p-gewoehnlich: #453E31; /* 8,3:1 */
+  --selt-p-magisch:     #14527E; /* 6,5:1 */
+  --selt-p-selten:      #7A5406; /* 5,3:1 */
+  --selt-p-einzigartig: #8A3A08; /* 6,1:1 */
+
+  --besser:       #1E6B2E;  /* nur auf Pergament                              */
+  --schlechter:   #9E2B1C;
+  --besser-hell:  #6FD188;  /* nur auf dunklem Grund                          */
+
+  /* --- Schriften ---------------------------------------------------------- */
+  /* Fraunces (OFL) ist eine Serifenschrift mit absichtlich schiefen Details.
+     Sie trägt Namen und Überschriften – weich eingestellt (SOFT/WONK), damit
+     sie geschnitzt statt gedruckt wirkt. Public Sans (OFL) trägt alles, was
+     im Kampf schnell gelesen werden muss.                                    */
+  --schrift-titel: 'Fraunces Variable', Georgia, serif;
+  --schrift:       'Public Sans', system-ui, sans-serif;
+  --schrift-runen: 'Noto Sans Runic', serif;
+  --schnitzen: 'SOFT' 40, 'WONK' 1;   /* immer zusammen mit --schrift-titel   */
+
+  --gr-titel:  26px;
+  --gr-kopf:   19px;
+  --gr-text:   16px;
+  --gr-klein:  14px;
+  --gr-winzig: 12px;
+  --zeile:     1.5;
+
+  /* --- Abstandsraster: Vielfache von 4 px --------------------------------- */
+  --a1: 4px; --a2: 8px; --a3: 12px; --a4: 16px; --a5: 20px; --a6: 24px; --a8: 32px;
+
+  /* --- Formen -------------------------------------------------------------- */
+  /* Sechseck mit flacher Oberkante – die Grundform aller Knöpfe.             */
+  --wabe: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  /* Abgeschrägte Enden – die Grundform aller Balken und Leisten.             */
+  --schraeg:      polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+  --schraeg-weit: polygon(18px 0, 100% 0, calc(100% - 18px) 100%, 0 100%);
+  --r-fenster: 2px;   /* Fenster sind fast eckig                              */
+
+  /* --- Schatten ------------------------------------------------------------ */
+  --schatten-fenster: 0 18px 46px rgba(0,0,0,.72);
+  --schatten-text:    0 1px 2px rgba(0,0,0,.92), 0 0 8px rgba(0,0,0,.75);
+  --glut-schein:      0 0 14px rgba(255,154,60,.45);
+
+  /* --- Größen -------------------------------------------------------------- */
+  --wabe-gross: 68px;   /* Zauberfeld: 68 breit, 78 hoch                       */
+  --wabe-klein: 50px;   /* Trank, Zustand, Stufe                               */
+  --feld-p:     46px;   /* Gegenstandsfeld im Pergament-Inventar               */
+}
+
+/* =========================================================================
+   Grundgerüst
+   ========================================================================= */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+
+body {
+  position: relative; width: 1920px; height: 1080px;
+  font-family: var(--schrift); font-size: var(--gr-text); line-height: var(--zeile);
+  color: var(--creme);
+  -webkit-font-smoothing: antialiased;
+}
+
+#buehne { position: absolute; inset: 0; background: #05080a url('../hintergrund.png') center / cover no-repeat; }
+#vignette {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 80% 74% at 50% 46%, transparent 54%, rgba(2,6,3,.56) 100%);
+}
+/* Feste Ebenenfolge: Welt < HUD < Abdunkelung < Fenster. */
+.ebene { position: absolute; inset: 0; pointer-events: none; }
+#welt { z-index: 1; }
+#hud { z-index: 2; }
+#schleier { z-index: 3; }
+#inventar, .tooltip, #schriftrolle, #wegweiser, #questmeldung { z-index: 4; }
+
+html [data-nur] { display: none; }
+html[data-szene='hud']          [data-nur~='hud'],
+html[data-szene='inventar']     [data-nur~='inventar'],
+html[data-szene='schriftrolle'] [data-nur~='schriftrolle'],
+html[data-szene='wegweiser']    [data-nur~='wegweiser'] { display: var(--anzeige, block); }
+
+#schleier { position: absolute; inset: 0; background: rgba(4,8,5,.60); }
+
+/* =========================================================================
+   Grundbausteine
+   ========================================================================= */
+.titel {
+  font-family: var(--schrift-titel); font-variation-settings: var(--schnitzen);
+  font-weight: 600; font-size: var(--gr-titel); letter-spacing: .005em;
+}
+.kopf {
+  font-family: var(--schrift-titel); font-variation-settings: var(--schnitzen);
+  font-weight: 600; font-size: var(--gr-kopf);
+}
+.versal {
+  font-size: var(--gr-winzig); font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+}
+.leise { color: var(--creme-leise); }
+
+/* --- Sechseck ------------------------------------------------------------ */
+.wabe { position: relative; isolation: isolate; width: var(--wabe-gross); height: calc(var(--wabe-gross) * 1.15); }
+.wabe::before, .wabe::after { content: ''; position: absolute; clip-path: var(--wabe); }
+.wabe::before { inset: 0; background: rgba(242,234,218,.5); z-index: 0; }  /* Kante   */
+.wabe::after  { inset: 2px; background: linear-gradient(#1E2E23, #0B100D); z-index: 1; } /* Fläche */
+.wabe svg {
+  position: absolute; left: 19%; top: 24%; width: 62%; height: 52%;
+  color: var(--creme); z-index: 2;
+}
+.wabe.aktiv::before { background: var(--glut); }
+.wabe.aktiv::after  { background: linear-gradient(#3A2410, #140A05); }
+.wabe.aktiv svg { color: var(--glut); }
+.wabe .abkling {
+  position: absolute; inset: 2px; z-index: 3; display: grid; place-items: center;
+  clip-path: var(--wabe); background: rgba(6,10,7,.78);
+  font-family: var(--schrift-titel); font-variation-settings: var(--schnitzen);
+  font-weight: 600; font-size: 24px; color: var(--creme);
+}
+.wabe .anzahl {
+  position: absolute; right: 8px; bottom: 11px; z-index: 3;
+  font-size: var(--gr-klein); font-weight: 700; color: var(--creme);
+  text-shadow: 0 1px 2px #000, 0 0 4px #000;
+}
+.wabe-zelle { width: var(--wabe-gross); text-align: center; }
+.wabe-zelle .taste {
+  margin-top: 2px; font-size: var(--gr-winzig); font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--creme-leise);
+  text-shadow: var(--schatten-text);
+}
+.wabe.klein { width: var(--wabe-klein); height: calc(var(--wabe-klein) * 1.15); }
+.wabe.klein svg { left: 24%; top: 28%; width: 52%; height: 44%; }
+
+/* --- Balken mit abgeschrägten Enden -------------------------------------- */
+.balken { position: relative; clip-path: var(--schraeg); background: rgba(6,10,7,.8); overflow: hidden; }
+.balken > i { display: block; height: 100%; }
+.balken > span {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 14px;
+  font-size: var(--gr-klein); font-weight: 700; color: #FFFFFF;
+  text-shadow: 0 1px 2px #000, 0 0 4px #000;
+}
+.balken > span em { font-style: normal; }
+.balken > span em:first-child { font-weight: 600; letter-spacing: .1em; text-transform: uppercase; font-size: var(--gr-winzig); opacity: .9; }
+.f-leben > i { background: linear-gradient(var(--leben-hell), var(--leben)); }
+.f-mana  > i { background: linear-gradient(var(--mana-hell), var(--mana)); }
+.f-ep    > i { background: linear-gradient(var(--ep-hell), var(--ep)); }
+.f-feind > i { background: linear-gradient(var(--feind-hell), var(--feind)); }
+.f-glut  > i { background: linear-gradient(#FFB464, var(--glut)); }
+
+/* =========================================================================
+   Boss oben Mitte
+   ========================================================================= */
+#boss { --anzeige: block; position: absolute; left: 50%; top: 30px; transform: translateX(-50%); width: 700px; text-align: center; }
+#boss .name {
+  font-family: var(--schrift-titel); font-variation-settings: var(--schnitzen);
+  font-weight: 600; font-size: 25px; letter-spacing: .02em;
+  color: var(--creme); text-shadow: var(--schatten-text);
+}
+#boss .leiste { height: 16px; margin-top: var(--a2); clip-path: var(--schraeg-weit); }
+#boss .leiste > i { background: linear-gradient(#E8623A, var(--leben) 70%, #6E1A0E); }
+#boss .leiste > span { font-size: var(--gr-winzig); letter-spacing: .06em; }
+#boss .zustaende { display: flex; justify-content: center; gap: var(--a3); margin-top: var(--a3); }
+#boss .zustand {
+  display: flex; align-items: center; gap: 7px;
+  padding: 4px var(--a3) 4px var(--a2);
+  background: var(--glas); clip-path: var(--schraeg);
+  font-size: var(--gr-winzig); font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--creme);
+}
+#boss .zustand svg { width: 15px; height: 15px; color: var(--glut); }
+
+/* =========================================================================
+   Oben rechts: Sechseck-Minikarte und Pergamentnotiz
+   ========================================================================= */
+#oben-rechts { position: absolute; right: 34px; top: 24px; width: 232px; }
+#minikarte { position: relative; width: 232px; height: 266px; }
+#minikarte .rahmen, #minikarte .flaeche { position: absolute; inset: 0; clip-path: var(--wabe); }
+#minikarte .rahmen { background: rgba(242,234,218,.42); }
+#minikarte .flaeche { inset: 3px; overflow: hidden; background: #0F1A12; }
+#minikarte svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+#minikarte .zone {
+  position: absolute; left: 0; right: 0; bottom: 6px; text-align: center;
+  font-family: var(--schrift-titel); font-variation-settings: var(--schnitzen);
+  font-weight: 600; font-size: var(--gr-kopf); color: var(--creme);
+  text-shadow: var(--schatten-text);
+}
+
+/* Die Aufgabennotiz ist bewusst ein Stück Pergament mitten im dunklen HUD –
+   derselbe Werkstoff wie die großen Fenster, nur klein. */
+.notiz {
+  position: relative;
+  padding: var(--a4) var(--a4) var(--a4) var(--a5);
+  color: var(--tinte-text);
+  background-color: rgba(239,227,200,.94);
+  background-image:
+    repeating-linear-gradient(103deg, rgba(140,110,60,.055) 0 3px, transparent 3px 9px),
+    radial-gradient(ellipse at 80% 100%, rgba(150,120,70,.25), transparent 62%);
+  box-shadow: 0 10px 24px rgba(0,0,0,.55), inset 0 0 0 1px rgba(27,42,32,.35);
+  clip-path: polygon(0 6px, 6px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
+}
+.notiz::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--glut-tinte); }
+#oben-rechts .notiz { margin-top: var(--a4); }
+.notiz .ueberschrift {
+  font-size: var(--gr-winzig); font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--tinte-leise); margin-bottom: var(--a2);
+}
+.quest { margin-bottom: var(--a3); }
+.quest:last-child { margin-bottom: 0; }
+.quest .q-name {
+  font-family: var(--schrift-titel); font-variation-settings: var(--schnitzen);
+  font-weight: 600; font-size: var(--gr-text); color: var(--tinte-text);
+}
+.quest .q-schritt { font-size: var(--gr-klein); color: var(--tinte-leise); }
+.quest .q-schritt b { color: var(--tinte-text); }
+.quest .q-schritt.erledigt { text-decoration: line-through; opacity: .72; }
+
+/* =========================================================================
+   Unten links: Leben, Mana, Erfahrung, Stufe
+   ========================================================================= */
+#zustand-spieler { position: absolute; left: 40px; bottom: 40px; display: flex; align-items: flex-end; gap: var(--a3); }
+#zustand-spieler .stufe {
+  position: relative; isolation: isolate; width: 58px; height: 67px;
+}
+#zustand-spieler .stufe::before, #zustand-spieler .stufe::after { content: ''; position: absolute; clip-path: var(--wabe); }
+#zustand-spieler .stufe::before { inset: 0; background: var(--glut); z-index: 0; }
+#zustand-spieler .stufe::after { inset: 2px; background: linear-gradient(#1E2E23, #0B100D); z-index: 1; }
+#zustand-spieler .stufe b {
+  position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; padding-top: 2px;
+  font-family: var(--schrift-titel); font-variation-settings: var(--schnitzen);
+  font-weight: 600; font-size: 26px; color: var(--glut);
+}
+#zustand-spieler .stufe small {
+  position: absolute; left: 0; right: 0; bottom: -17px; text-align: center;
+  font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--creme-leise); text-shadow: var(--schatten-text);
+}
+#zustand-spieler .balkenblock { width: 320px; }
+#zustand-spieler .balken.leben { height: 26px; }
+#zustand-spieler .balken.mana  { height: 18px; margin-top: 5px; }
+#zustand-spieler .balken.ep    { height: 6px;  margin-top: 5px; }
+#zustand-spieler .balken.ep > span { display: none; }
+#zustand-spieler .eptext {
+  margin-top: 5px; font-size: 11px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--creme-sehr-leise); text-shadow: var(--schatten-text);
+}
+
+/* Stärkungen: kleine Waben über den Balken */
+#staerkungen { position: absolute; left: 40px; bottom: 164px; display: flex; gap: var(--a2); }
+#staerkungen .wabe-zelle { width: 44px; }
+#staerkungen .wabe { width: 44px; height: 50px; }
+#staerkungen .wabe svg { left: 25%; top: 29%; width: 50%; height: 42%; }
+#staerkungen .wabe::before { background: rgba(127,224,210,.55); }
+#staerkungen .taste { font-size: 11px; }
+
+/* =========================================================================
+   Unten Mitte: Zauberwaben
+   ========================================================================= */
+#zauber { position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%); display: flex; align-items: flex-start; gap: var(--a2); }
+#zauber .luecke { width: var(--a5); }
+
+/* Unten rechts: Tränke */
+#traenke { position: absolute; right: 40px; bottom: 44px; display: flex; gap: var(--a2); }
+#traenke .wabe-zelle { width: var(--wabe-klein); }
+#traenke .wabe.klein::before { background: rgba(242,234,218,.42); }
+
+/* =========================================================================
+   Weltanzeigen
+   ========================================================================= */
+.welt-el { position: absolute; transform: translate(-50%, -50%); }
+
+.gegner { width: 116px; text-align: center; }
+.gegner .name {
+  font-size: var(--gr-winzig); font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--creme); text-shadow: var(--schatten-text); white-space: nowrap;
+}
+.gegner .balken { height: 7px; margin-top: 3px; }
+.gegner .zusatz {
+  margin-top: 3px; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--rune); text-shadow: var(--schatten-text);
+}
+
+.schaden {
+  font-family: var(--schrift-titel); font-variation-settings: var(--schnitzen);
+  font-weight: 600; font-size: 32px; color: var(--creme);
+  text-shadow: 0 2px 3px #000, 0 0 10px rgba(0,0,0,.95), 0 0 2px #000;
+  white-space: nowrap;
+}
+.schaden.krit { font-size: 52px; color: var(--glut); text-shadow: 0 2px 3px #000, 0 0 18px rgba(255,120,20,.7), 0 0 3px #000; }
+.schaden.krit small {
+  display: block; margin-top: -8px; text-align: center;
+  font-family: var(--schrift); font-size: 12px; font-weight: 700; letter-spacing: .3em;
+  color: var(--creme);
+}
+.schaden.brand { font-size: 23px; color: #FFC27A; }
+
+.beute {
+  --anzeige: flex;
+  transform: translate(-50%, -100%);
+  display: flex; align-items: center; gap: var(--a2);
+  padding: 4px var(--a3) 5px; white-space: nowrap;
+  background: var(--glas); clip-path: var(--schraeg);
+  font-size: var(--gr-klein); font-weight: 600;
+  text-shadow: var(--schatten-text);
+}
+.beute::before { content: ''; width: 7px; height: 8px; clip-path: var(--wabe); background: currentColor; }
+.beute.gewoehnlich { color: var(--selt-gewoehnlich); }
+.beute.magisch     { color: var(--selt-magisch); }
+.beute.selten      { color: var(--selt-selten); }
+.beute.einzigartig { color: var(--selt-einzigartig); }
+.beute.gold        { color: var(--creme-leise); }
+
+.questzeichen {
+  transform: translate(-50%, -100%);
+  font-family: var(--schrift-titel); font-variation-settings: var(--schnitzen);
+  font-weight: 600; font-size: 46px; color: var(--glut);
+  text-shadow: 0 0 16px rgba(255,154,60,.85), 0 2px 3px #000;
+}
+.npcname {
+  transform: translate(-50%, -50%);
+  font-size: var(--gr-klein); font-weight: 600; letter-spacing: .06em;
+  color: var(--creme); text-shadow: var(--schatten-text); white-space: nowrap;
+}
+
+/* =========================================================================
+   Pergamentfenster
+   ========================================================================= */
+.pergament {
+  position: relative;
+  color: var(--tinte-text);
+  background-color: var(--pergament);
+  background-image:
+    repeating-linear-gradient(103deg, rgba(140,110,60,.05) 0 3px, transparent 3px 9px),
+    repeating-linear-gradient(17deg,  rgba(120,95,50,.04) 0 2px, transparent 2px 7px),
+    radial-gradient(ellipse at 18% 6%,  rgba(186,154,96,.22), transparent 55%),
+    radial-gradient(ellipse at 88% 94%, rgba(150,120,70,.28), transparent 58%);
+  border: 2px solid var(--rand-dunkel);
+  border-radius: var(--r-fenster);
+  box-shadow: var(--schatten-fenster), inset 0 0 70px rgba(130,100,56,.30);
+}
+.pergament .fenster-kopf {
+  display: flex; align-items: baseline; justify-content: space-between; gap: var(--a4);
+  padding: var(--a4) var(--a6) var(--a3);
+  border-bottom: 2px solid var(--rand-dunkel);
+}
+.pergament .fenster-kopf .titel { color: var(--tinte-text); }
+.pergament .fenster-kopf .neben { font-size: var(--gr-klein); color: var(--tinte-leise); }
+.p-leise { color: var(--tinte-leise); }
+
+/* =========================================================================
+   Inventar
+   ========================================================================= */
+#inventar { --anzeige: block; position: absolute; left: 118px; top: 50%; transform: translateY(-50%); width: 1024px; }
+#inventar .koerper { display: flex; }
+#inventar .spalte-held { width: 404px; padding: var(--a6); border-right: 2px solid var(--rand-dunkel); }
+#inventar .spalte-tasche { flex: 1; padding: var(--a6); display: flex; flex-direction: column; }
+#inventar h2 {
+  margin: 0 0 var(--a4);
+  font-size: var(--gr-winzig); font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--tinte-leise);
+}
+
+.ausruestung { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--a2); }
+.ausruestung .platz {
+  position: relative; height: 72px;
+  background: var(--pergament-tief);
+  box-shadow: inset 0 0 0 1px rgba(27,42,32,.28), inset 0 2px 6px rgba(90,70,40,.35);
+}
+.ausruestung .platz > span {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(90,76,56,.72);
+}
+.ausruestung .platz.belegt { box-shadow: inset 0 0 0 2px var(--selt-p-magisch), inset 0 2px 6px rgba(90,70,40,.3); }
+.ausruestung .platz.belegt svg { position: absolute; inset: 12px; width: calc(100% - 24px); height: calc(100% - 24px); color: var(--selt-p-magisch); }
+
+.werte { margin-top: var(--a5); }
+.werte .zeile {
+  display: flex; justify-content: space-between; gap: var(--a4);
+  padding: 5px 0; border-bottom: 1px solid var(--pergament-kante);
+  font-size: var(--gr-klein); color: var(--tinte-leise);
+}
+.werte .zeile:last-child { border-bottom: none; }
+.werte .zeile b { font-size: var(--gr-text); color: var(--tinte-text); }
+.werte .zeile b.plus { color: var(--besser); }
+
+.taschenraster { display: grid; grid-template-columns: repeat(9, var(--feld-p)); gap: 7px; }
+.taschenraster .feld {
+  position: relative; width: var(--feld-p); height: var(--feld-p);
+  background: var(--pergament-tief);
+  box-shadow: inset 0 0 0 1px rgba(27,42,32,.25), inset 0 2px 5px rgba(90,70,40,.35);
+}
+.taschenraster .feld svg { position: absolute; inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); }
+.taschenraster .feld .anzahl {
+  position: absolute; right: 3px; bottom: 0;
+  font-size: var(--gr-winzig); font-weight: 700; color: var(--tinte-text);
+}
+.taschenraster .feld.r-gewoehnlich { box-shadow: inset 0 0 0 2px var(--selt-p-gewoehnlich), inset 0 2px 5px rgba(90,70,40,.3); }
+.taschenraster .feld.r-magisch     { box-shadow: inset 0 0 0 2px var(--selt-p-magisch),     inset 0 2px 5px rgba(90,70,40,.3); }
+.taschenraster .feld.r-selten      { box-shadow: inset 0 0 0 2px var(--selt-p-selten),      inset 0 2px 5px rgba(90,70,40,.3); }
+.taschenraster .feld.r-einzigartig { box-shadow: inset 0 0 0 2px var(--selt-p-einzigartig), inset 0 2px 5px rgba(90,70,40,.3); }
+.taschenraster .feld.gewaehlt      { box-shadow: inset 0 0 0 3px var(--glut-tinte), 0 0 0 2px rgba(138,59,16,.35); }
+
+.schluessel { display: flex; flex-wrap: wrap; gap: var(--a4); margin-top: auto; padding-top: var(--a5); }
+.schluessel span { display: flex; align-items: center; gap: 6px; font-size: var(--gr-winzig); font-weight: 600; }
+.schluessel i { width: 10px; height: 11px; clip-path: var(--wabe); background: currentColor; }
+
+/* =========================================================================
+   Tooltip — ebenfalls Pergament, damit Fenster und Tooltip zusammengehören
+   ========================================================================= */
+.tooltip { width: 338px; overflow: hidden; }
+#tt-neu       { position: absolute; left: 1512px; top: 212px; }
+#tt-vergleich { position: absolute; left: 1158px; top: 252px; }
+.tooltip .tt-kopf { padding: var(--a4) var(--a5) var(--a3); border-bottom: 2px solid var(--rand-dunkel); }
+.tooltip .tt-name {
+  font-family: var(--schrift-titel); font-variation-settings: var(--schnitzen);
+  font-weight: 600; font-size: 21px; line-height: 1.2;
+}
+.tooltip .tt-art { font-size: var(--gr-winzig); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--tinte-leise); margin-top: 3px; }
+.tooltip .tt-block { padding: var(--a3) var(--a5); border-bottom: 1px solid var(--pergament-kante); font-size: var(--gr-klein); }
+.tooltip .tt-block:last-child { border-bottom: none; }
+.tooltip .tt-zeile { display: flex; justify-content: space-between; gap: var(--a4); color: var(--tinte-leise); }
+.tooltip .tt-zeile b { font-size: var(--gr-text); color: var(--tinte-text); }
+.tooltip .d { font-size: var(--gr-winzig); font-weight: 700; }
+.tooltip .d.auf { color: var(--besser); }
+.tooltip .d.ab  { color: var(--schlechter); }
+.tooltip .implizit { color: var(--rune-tinte); }
+.tooltip .affix { color: var(--selt-p-magisch); }
+.tooltip .affix div { margin-bottom: 2px; }
+.tooltip .spruch { color: var(--glut-tinte); font-style: italic; }
+.tooltip .bedarf { font-size: var(--gr-winzig); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--tinte-leise); }
+.tooltip .marke {
+  padding: 5px var(--a5); font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--pergament); background: var(--rand-dunkel);
+}
+.tooltip.r-selten  .tt-name { color: var(--selt-p-selten); }
+.tooltip.r-magisch .tt-name { color: var(--selt-p-magisch); }
+
+/* =========================================================================
+   Schriftrolle
+   ========================================================================= */
+#schriftrolle { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 830px; }
+#schriftrolle .rollenfeld {
+  margin: var(--a6) var(--a8);
+  padding: var(--a6) var(--a6) var(--a8);
+  box-shadow: inset 0 0 0 1px var(--pergament-kante);
+}
+.runenzeile {
+  font-family: var(--schrift-runen);
+  font-size: 25px; line-height: 2; letter-spacing: .12em;
+  text-align: center; white-space: nowrap;
+  color: #6A5F4A;   /* 4,6:1 auf Pergament – lesbar als Zeichen, nicht als Wort */
+}
+.runenzeile .glimmt {
+  color: #8A3B10;
+  text-shadow: 0 0 10px rgba(255,154,60,.9), 0 0 24px rgba(255,120,20,.5);
+}
+#schriftrolle .hinweis {
+  margin: 0 var(--a8) var(--a5); padding-left: var(--a4);
+  border-left: 4px solid var(--glut-tinte);
+  font-size: var(--gr-text); color: var(--tinte-leise);
+}
+#schriftrolle .hinweis b { color: var(--tinte-text); }
+#schriftrolle .fortschritt {
+  display: flex; align-items: center; gap: var(--a4);
+  margin: 0 var(--a8) var(--a6);
+  font-size: var(--gr-winzig); font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--tinte-leise);
+}
+#schriftrolle .fortschritt .bett { flex: 1; height: 8px; background: var(--pergament-tief); box-shadow: inset 0 0 0 1px rgba(27,42,32,.3); clip-path: var(--schraeg); }
+#schriftrolle .fortschritt .bett > i { display: block; height: 100%; background: var(--glut-tinte); }
+
+/* =========================================================================
+   Wegweiser
+   ========================================================================= */
+#wegweiser { position: absolute; left: 50%; top: 300px; transform: translateX(-50%); width: 648px; }
+#wegweiser .arme { padding: var(--a5) var(--a6) var(--a6); }
+.arm { display: flex; align-items: center; gap: var(--a4); padding: var(--a3) 0; border-bottom: 1px solid var(--pergament-kante); }
+.arm:last-child { border-bottom: none; }
+.arm .sinnbild { flex: 0 0 38px; color: var(--tinte-leise); }
+.arm .sinnbild svg { width: 38px; height: 38px; display: block; }
+.arm .text { flex: 1; }
+.arm .ziel {
+  font-family: var(--schrift-titel); font-variation-settings: var(--schnitzen);
+  font-weight: 600; font-size: 20px; color: var(--tinte-text);
+}
+.arm .ziel small { font-family: var(--schrift); font-size: var(--gr-winzig); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--tinte-leise); margin-left: var(--a2); }
+.arm .grund { font-size: var(--gr-klein); color: var(--tinte-leise); }
+.arm .marke {
+  flex: 0 0 auto; padding: 4px var(--a3);
+  font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  clip-path: var(--schraeg);
+}
+.arm.gesperrt .ziel { color: var(--tinte-leise); }
+.arm.gesperrt .marke { color: var(--pergament); background: #6B5A44; }
+.arm.offen .ziel { color: var(--glut-tinte); }
+.arm.offen .sinnbild { color: var(--glut-tinte); }
+.arm.offen .marke { color: var(--pergament); background: var(--besser); }
+
+.weltknopf {
+  --anzeige: flex;
+  transform: translate(-50%, -50%);
+  align-items: center; gap: var(--a3);
+  padding: 7px var(--a4) 7px var(--a3);
+  background: var(--glas); clip-path: var(--schraeg-weit);
+  font-size: var(--gr-text); color: var(--creme); white-space: nowrap;
+}
+.weltknopf kbd {
+  position: relative; display: grid; place-items: center; width: 26px; height: 30px;
+  font-family: var(--schrift); font-size: var(--gr-klein); font-weight: 700; color: var(--tinte);
+}
+.weltknopf kbd::before { content: ''; position: absolute; inset: 0; clip-path: var(--wabe); background: var(--glut); z-index: -1; }
+
+/* Questmeldung: schmaler Pergamentstreifen */
+#questmeldung {
+  position: absolute; left: 50%; top: 140px; transform: translateX(-50%);
+  width: 560px; padding: var(--a4) var(--a6); text-align: center;
+}
+#questmeldung .marke { font-size: var(--gr-winzig); font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--glut-tinte); }
+#questmeldung .name {
+  margin-top: 2px;
+  font-family: var(--schrift-titel); font-variation-settings: var(--schnitzen);
+  font-weight: 600; font-size: 24px; color: var(--tinte-text);
+}
+#questmeldung .ziel { margin-top: 2px; font-size: var(--gr-text); color: var(--tinte-leise); }

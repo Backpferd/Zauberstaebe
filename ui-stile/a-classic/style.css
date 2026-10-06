@@ -1,0 +1,674 @@
+/* ===========================================================================
+   VARIANTE A — „CLASSIC“
+   Stilleitfaden für die Oberfläche von „Zauberstäbe“
+   Vorbild: World of Warcraft Classic. Warm, holzig, bewusst funktional statt
+   schick. Alles eckig, alles beschriftet, nichts versteckt.
+
+   Diese :root-Blöcke sind der verbindliche Teil. Wer später ein Fenster, eine
+   Leiste oder einen Tooltip baut, nimmt ausschließlich diese Variablen.
+   Die Kontrastwerte sind gemessen (WCAG 2.1), alle Textpaare liegen über 4,5:1.
+   =========================================================================== */
+
+:root {
+  /* --- Flächen (von dunkel nach hell) ----------------------------------- */
+  --grund:        #150E08;  /* Fenstergrund, Rahmeninneres                    */
+  --holz:         #2B1E12;  /* normale Panelfläche                            */
+  --holz-hell:    #3E2C1A;  /* Hervorhebung, Zeile unter dem Mauszeiger       */
+  --nut:          #0C0805;  /* Vertiefungen: Balkenbetten, Symbolfelder       */
+
+  /* --- Rahmen ------------------------------------------------------------ */
+  --kante-dunkel: #0A0603;  /* äußerste Linie, 1 px, immer vorhanden          */
+  --kante:        #6E5330;  /* Standardrahmen, 2 px                           */
+  --kante-hell:   #A8824A;  /* Oberkante / Lichtkante, 1 px                   */
+  --kante-aktiv:  #E8C063;  /* aktives Feld, Fokus                            */
+
+  /* --- Schrift ----------------------------------------------------------- */
+  --text:         #F3E7D2;  /* 13,2:1 auf --holz · 15,6:1 auf --grund         */
+  --text-leise:   #C9B392;  /*  8,0:1 auf --holz                              */
+  --text-sehr-leise: #9C8767; /* nur für Randnotizen, nie für Werte           */
+  --gold:         #F0C860;  /* 10,1:1 auf --holz — Überschriften, Zahlen      */
+  --weiss:        #FFFFFF;  /* 16,2:1 auf --holz — Text auf Farbbalken        */
+
+  /* --- Zustandsfarben ---------------------------------------------------- */
+  --leben:        #2F7D3C;  /* Spielerleben, grün wie in WoW Classic          */
+  --leben-hell:   #4CA85A;
+  --mana:         #2A54A8;
+  --mana-hell:    #4376D8;
+  --feind:        #9E2A1E;  /* Gegnerleben                                    */
+  --feind-hell:   #D14A33;
+  --ep:           #5B2E86;  /* Erfahrung, violett wie in WoW Classic          */
+  --ep-hell:      #8B4FC4;
+  --eis:          #7FD8F0;  /* Kälteeffekte, „Eingefroren“                    */
+  --warnung:      #E05A2A;  /* Abklingzeiten, Gefahr                          */
+
+  /* --- Seltenheiten (Kontrast gegen --holz) ------------------------------ */
+  --selt-gewoehnlich: #FFFFFF; /* 16,2:1 */
+  --selt-ungewoehnlich: #5FD95F; /*  8,9:1 */
+  --selt-selten:      #5FAEFF; /*  6,9:1 */
+  --selt-episch:      #C98CFF; /*  6,7:1 */
+  --selt-legendaer:   #FFA23C; /*  8,1:1 */
+
+  /* --- Vergleichswerte im Tooltip ---------------------------------------- */
+  --besser:       #58D16B;
+  --schlechter:   #E8705C;
+
+  /* --- Schriften --------------------------------------------------------- */
+  /* Marcellus (OFL) ist die freie Annäherung an die Friz Quadrata von WoW.
+     Sie wird NUR für Überschriften und Eigennamen benutzt, nie für Fließtext
+     und nie für Zahlen im Kampf. Alles andere ist Source Sans 3 (OFL).        */
+  --schrift-titel: 'Marcellus', 'Source Sans 3', serif;
+  --schrift:       'Source Sans 3', system-ui, sans-serif;
+  --schrift-runen: 'Noto Sans Runic', serif;
+
+  --gr-titel:   22px;  /* Fenstertitel                                        */
+  --gr-kopf:    17px;  /* Abschnittsüberschrift, Questname                    */
+  --gr-text:    16px;  /* Fließtext, Questschritte                            */
+  --gr-klein:   14px;  /* Nebenangaben, Einheiten                             */
+  --gr-winzig:  12px;  /* Tastenkürzel, Zähler                                */
+  --zeile:      1.4;
+
+  /* --- Abstandsraster: Vielfache von 4 px -------------------------------- */
+  --a1:  4px;
+  --a2:  8px;
+  --a3: 12px;
+  --a4: 16px;
+  --a6: 24px;
+  --a8: 32px;
+
+  /* --- Radien: Classic ist eckig ---------------------------------------- */
+  --r-null:  0px;   /* Standard für alles                                     */
+  --r-klein: 2px;   /* einzige erlaubte Ausnahme: Symbolfelder                */
+
+  /* --- Rahmen- und Schattenrezepte --------------------------------------- */
+  /* Immer in dieser Reihenfolge: innen dunkel, Mitte Bronze, außen schwarz.  */
+  --rahmen-panel:  2px solid var(--kante);
+  --schatten-panel: 0 0 0 1px var(--kante-dunkel), 0 4px 14px rgba(0,0,0,.75),
+                    inset 0 1px 0 rgba(216,180,106,.22);
+  --schatten-nut:  inset 0 2px 5px rgba(0,0,0,.85), 0 0 0 1px var(--kante-dunkel);
+  --schatten-feld: 0 0 0 1px var(--kante-dunkel), 0 2px 5px rgba(0,0,0,.7);
+  --schrift-schatten: 0 1px 2px #000, 0 0 3px rgba(0,0,0,.9);
+
+  /* --- Holzmaserung als Verlauf, ohne Bilddatei -------------------------- */
+  --maser: repeating-linear-gradient(94deg,
+            rgba(255,220,160,.045) 0 2px, rgba(0,0,0,.05) 2px 5px,
+            rgba(255,220,160,.02) 5px 9px, rgba(0,0,0,.04) 9px 13px);
+
+  /* --- Größen der immer gleichen Bausteine ------------------------------- */
+  --feld:        46px;  /* Zauber- und Gegenstandsfeld                        */
+  --feld-klein:  36px;  /* Stärkungszauber, Taschensymbole                    */
+  --balken-hoch: 16px;  /* Lebens-/Manabalken in den Einheitsfenstern         */
+}
+
+/* =========================================================================
+   Grundgerüst
+   ========================================================================= */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+
+body {
+  position: relative;
+  width: 1920px; height: 1080px;
+  font-family: var(--schrift);
+  font-size: var(--gr-text);
+  line-height: var(--zeile);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+#buehne {
+  position: absolute; inset: 0;
+  background: #05080a url('../hintergrund.png') center / cover no-repeat;
+}
+#vignette {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 78% 72% at 50% 46%, transparent 52%, rgba(0,0,0,.55) 100%);
+}
+/* Feste Ebenenfolge: Welt < HUD < Abdunkelung < Fenster. */
+.ebene { position: absolute; inset: 0; pointer-events: none; }
+#welt { z-index: 1; }
+#hud { z-index: 2; }
+#schleier { z-index: 3; }
+#inventar, .tooltip, #zeiger, #schriftrolle, #wegweiser, #questmeldung { z-index: 4; }
+
+/* Szenensteuerung: nur was zur Szene gehört, wird gezeigt.
+   --anzeige setzt den Anzeigemodus, falls es nicht „block“ sein soll. */
+html [data-nur] { display: none; }
+html[data-szene='hud']          [data-nur~='hud'],
+html[data-szene='inventar']     [data-nur~='inventar'],
+html[data-szene='schriftrolle'] [data-nur~='schriftrolle'],
+html[data-szene='wegweiser']    [data-nur~='wegweiser'] { display: var(--anzeige, block); }
+
+/* Abdunkelung hinter geöffneten Fenstern */
+#schleier {
+  position: absolute; inset: 0; background: rgba(4,3,2,.45);
+}
+
+/* =========================================================================
+   Bausteine
+   ========================================================================= */
+.panel {
+  background: var(--maser), linear-gradient(#2F2114, #1A1209 70%, #120C06);
+  border: var(--rahmen-panel);
+  border-top-color: var(--kante-hell);
+  box-shadow: var(--schatten-panel);
+}
+.nut {
+  background: linear-gradient(#070503, #140D07);
+  border: 1px solid var(--kante-dunkel);
+  box-shadow: var(--schatten-nut);
+}
+.titel {
+  font-family: var(--schrift-titel);
+  font-size: var(--gr-titel);
+  color: var(--gold);
+  letter-spacing: .02em;
+  text-shadow: var(--schrift-schatten);
+}
+.kopf {
+  font-family: var(--schrift-titel);
+  font-size: var(--gr-kopf);
+  color: var(--gold);
+  text-shadow: var(--schrift-schatten);
+}
+.leise { color: var(--text-leise); }
+.winzig { font-size: var(--gr-winzig); }
+
+/* Fenstertitelleiste: schmaler Holzbalken mit Lichtkante */
+.fenster-kopf {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--a2) var(--a4);
+  background: linear-gradient(#4A3520, #2A1C0E);
+  border-bottom: 2px solid var(--kante);
+  box-shadow: inset 0 1px 0 rgba(232,192,99,.3);
+}
+.fenster-kopf .schliessen {
+  width: 22px; height: 22px; display: grid; place-items: center;
+  font-size: var(--gr-klein); color: var(--text-leise);
+  border: 1px solid var(--kante); background: var(--nut);
+}
+
+/* Symbolfeld (Zauber, Gegenstand, Stärkungszauber) */
+.feld {
+  position: relative;
+  width: var(--feld); height: var(--feld);
+  background: radial-gradient(circle at 50% 40%, #241A10, #0C0805 85%);
+  border: 2px solid var(--kante);
+  border-radius: var(--r-klein);
+  box-shadow: var(--schatten-feld), inset 0 0 8px rgba(0,0,0,.85);
+}
+.feld svg { position: absolute; inset: 5px; width: calc(100% - 10px); height: calc(100% - 10px); }
+.feld .taste {
+  position: absolute; top: 0; right: 2px;
+  font-size: var(--gr-winzig); font-weight: 700; color: var(--weiss);
+  text-shadow: 0 1px 2px #000, 0 0 3px #000, 1px 0 2px #000;
+}
+.feld .anzahl {
+  position: absolute; right: 2px; bottom: 0;
+  font-size: var(--gr-klein); font-weight: 700; color: var(--weiss);
+  text-shadow: 0 1px 2px #000, 0 0 3px #000;
+}
+.feld.aktiv { border-color: var(--kante-aktiv); box-shadow: 0 0 0 1px var(--kante-dunkel), 0 0 10px rgba(232,192,99,.5); }
+/* Abklingzeit: dunkler Kreisausschnitt plus Restsekunden, wie in Classic */
+.feld .abkling {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: 20px; font-weight: 700; color: var(--weiss);
+  text-shadow: 0 1px 3px #000, 0 0 5px #000;
+}
+.feld.ab-kurz  .abkling { background: conic-gradient(rgba(0,0,0,0) 0 82%, rgba(0,0,0,.78) 82% 100%); }
+.feld.ab-lang  .abkling { background: conic-gradient(rgba(0,0,0,0) 0 24%, rgba(0,0,0,.78) 24% 100%); }
+
+/* Symbolfarben der Zauber: kräftige Fläche hinter der Strichzeichnung */
+.sy-feuer  { background: radial-gradient(circle at 46% 38%, #7A2A08, #1E0803 88%); }
+.sy-frost  { background: radial-gradient(circle at 46% 38%, #124C68, #04161F 88%); }
+.sy-blitz  { background: radial-gradient(circle at 46% 38%, #3C1C62, #0D0518 88%); }
+.sy-schutz { background: radial-gradient(circle at 46% 38%, #164C56, #05171B 88%); }
+.sy-erde   { background: radial-gradient(circle at 46% 38%, #4A3312, #140C03 88%); }
+.sy-wind   { background: radial-gradient(circle at 46% 38%, #2A4A24, #0A1407 88%); }
+.sy-leben  { background: radial-gradient(circle at 46% 38%, #5E1414, #180404 88%); }
+.sy-mana   { background: radial-gradient(circle at 46% 38%, #16306E, #040A1E 88%); }
+
+/* Balken */
+.balken {
+  position: relative;
+  background: linear-gradient(#060402, #120C07);
+  border: 1px solid var(--kante-dunkel);
+  box-shadow: var(--schatten-nut);
+  overflow: hidden;
+}
+.balken > i {
+  display: block; height: 100%;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.28), inset 0 -4px 6px rgba(0,0,0,.35);
+}
+.balken > span {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font-size: var(--gr-winzig); font-weight: 700; color: var(--weiss);
+  text-shadow: 0 1px 2px #000, 0 0 3px #000;
+}
+.f-leben > i { background: linear-gradient(var(--leben-hell), var(--leben) 55%, #1C5226); }
+.f-mana  > i { background: linear-gradient(var(--mana-hell), var(--mana) 55%, #16306E); }
+.f-feind > i { background: linear-gradient(var(--feind-hell), var(--feind) 55%, #641408); }
+.f-ep    > i { background: linear-gradient(var(--ep-hell), var(--ep) 55%, #3A1A5A); }
+
+/* =========================================================================
+   Einheitenfenster oben links: Spieler und Ziel
+   ========================================================================= */
+#einheiten { position: absolute; left: var(--a4); top: var(--a3); width: 332px; }
+
+.einheit { --anzeige: flex; display: flex; gap: var(--a2); padding: var(--a2); margin-bottom: var(--a2); }
+.portraet {
+  position: relative; flex: 0 0 62px; height: 62px;
+  background: radial-gradient(circle at 50% 35%, #2A2038, #0A0710 90%);
+  border: 2px solid var(--kante);
+  box-shadow: var(--schatten-feld);
+}
+.portraet svg { position: absolute; inset: 3px; width: calc(100% - 6px); height: calc(100% - 6px); }
+.portraet .stufe {
+  position: absolute; right: -8px; bottom: -8px;
+  min-width: 22px; height: 20px; padding: 0 3px;
+  display: grid; place-items: center;
+  font-size: var(--gr-winzig); font-weight: 700; color: var(--gold);
+  background: var(--grund); border: 1px solid var(--kante);
+  box-shadow: 0 0 0 1px var(--kante-dunkel);
+}
+.einheit-daten { flex: 1; min-width: 0; }
+.einheit-name {
+  display: flex; align-items: baseline; justify-content: space-between; gap: var(--a2);
+  font-family: var(--schrift-titel); font-size: var(--gr-kopf); color: var(--text);
+  text-shadow: var(--schrift-schatten);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.einheit-name .sippe { font-family: var(--schrift); font-size: var(--gr-winzig); color: var(--text-leise); }
+.einheit .balken { height: var(--balken-hoch); margin-top: var(--a1); }
+.einheit.ziel { border-color: #8A2E1E; border-top-color: #C06A4A; }
+.einheit.ziel .portraet { border-color: #C9A24A; box-shadow: 0 0 0 1px var(--kante-dunkel), 0 0 9px rgba(201,162,74,.45); }
+.einheit.ziel .einheit-name { color: #FFD17A; }
+.elite-marke {
+  display: inline-block; margin-left: var(--a1); padding: 0 5px;
+  font-size: var(--gr-winzig); font-weight: 700; letter-spacing: .08em;
+  color: #241A08; background: linear-gradient(#F0C860, #B98A28);
+  border: 1px solid #6E4E12;
+}
+/* Zustände des Ziels: beschriftete Plaketten, damit man im Kampf nicht raten muss */
+.zustaende { --anzeige: flex; display: flex; flex-wrap: wrap; gap: 5px; }
+.zustand {
+  display: flex; align-items: center; gap: 5px;
+  padding: 3px 9px 3px 5px;
+  background: linear-gradient(rgba(58,24,12,.92), rgba(24,10,5,.92));
+  border: 1px solid #9E3A26;
+  box-shadow: 0 0 0 1px var(--kante-dunkel), 0 2px 5px rgba(0,0,0,.7);
+}
+.zustand svg { width: 18px; height: 18px; }
+.zustand b { font-size: var(--gr-winzig); font-weight: 600; color: var(--text); white-space: nowrap; }
+
+/* Eigene Stärkungszauber: rechts unter der Minikarte */
+#staerkungen { position: absolute; right: var(--a4); top: 268px; display: flex; gap: var(--a2); }
+.staerkung { width: var(--feld-klein); text-align: center; }
+.staerkung .feld { width: var(--feld-klein); height: var(--feld-klein); border-color: #4E8A6A; }
+.staerkung .feld svg { inset: 4px; width: 28px; height: 28px; }
+.staerkung b {
+  display: block; margin-top: 3px;
+  font-size: 11px; font-weight: 600; color: var(--text); text-shadow: var(--schrift-schatten);
+}
+
+/* =========================================================================
+   Minikarte oben rechts — eckig, mit Zonenbalken darüber
+   ========================================================================= */
+#minikarte { position: absolute; right: var(--a4); top: var(--a3); width: 216px; }
+#minikarte .zonenbalken {
+  display: flex; align-items: center; justify-content: center; gap: var(--a2);
+  height: 26px; padding: 0 var(--a2);
+  font-family: var(--schrift-titel); font-size: var(--gr-klein); color: var(--gold);
+  background: linear-gradient(#4A3520, #2A1C0E);
+  border: 2px solid var(--kante); border-bottom: none;
+  box-shadow: inset 0 1px 0 rgba(232,192,99,.3);
+  text-shadow: var(--schrift-schatten);
+}
+#minikarte .karte {
+  position: relative; height: 196px;
+  border: 2px solid var(--kante);
+  box-shadow: var(--schatten-panel);
+  background: #10180E;
+}
+#minikarte .karte svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+#minikarte .fussleiste {
+  display: flex; justify-content: space-between;
+  padding: 3px var(--a2) 4px;
+  font-size: 11px; color: var(--text-leise);
+  background: linear-gradient(#2A1C0E, #1A1209);
+  border: 2px solid var(--kante); border-top: none;
+}
+
+/* =========================================================================
+   Questverfolgung rechts
+   ========================================================================= */
+#quests { position: absolute; right: var(--a4); top: 352px; width: 272px; padding: var(--a3); }
+#quests .ueberschrift {
+  font-family: var(--schrift-titel); font-size: var(--gr-klein); letter-spacing: .1em;
+  color: var(--text-leise); text-transform: uppercase;
+  padding-bottom: var(--a1); margin-bottom: var(--a2);
+  border-bottom: 1px solid rgba(110,83,48,.6);
+}
+.quest { margin-bottom: var(--a3); }
+.quest:last-child { margin-bottom: 0; }
+.quest .q-name {
+  font-family: var(--schrift-titel); font-size: var(--gr-kopf); color: var(--gold);
+  text-shadow: var(--schrift-schatten);
+}
+.quest .q-ort { font-size: 12px; color: var(--text-sehr-leise); margin-bottom: var(--a1); }
+.quest .q-schritt {
+  display: flex; gap: var(--a2); font-size: var(--gr-text); color: var(--text);
+  text-shadow: var(--schrift-schatten);
+}
+.quest .q-schritt::before { content: '–'; color: var(--text-leise); }
+.quest .q-schritt b { color: var(--weiss); font-weight: 700; }
+.quest .q-schritt.erledigt { color: var(--text-sehr-leise); text-decoration: line-through; }
+.quest .q-schritt.erledigt::before { content: '✓'; color: var(--leben-hell); text-decoration: none; }
+
+/* =========================================================================
+   Unterer Rand: Aktionsleiste, Taschen, Gesprächsfenster, EP-Leiste
+   ========================================================================= */
+#aktionsleiste {
+  position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%);
+  display: flex; gap: 5px; padding: var(--a2);
+}
+#aktionsleiste .trenner { width: var(--a3); }
+
+#taschen {
+  position: absolute; right: var(--a4); bottom: 36px;
+  display: flex; align-items: flex-end; gap: var(--a2); padding: var(--a2);
+}
+#taschen .gold {
+  align-self: center; padding-right: var(--a2);
+  font-size: var(--gr-klein); font-weight: 700; color: var(--gold); text-shadow: var(--schrift-schatten);
+}
+#taschen .feld { width: var(--feld-klein); height: var(--feld-klein); }
+#taschen .feld.hauptbeutel { width: var(--feld); height: var(--feld); }
+
+/* Kampfmitschrift unten links — Classic zeigt den Kampf als Text */
+#mitschrift {
+  position: absolute; left: var(--a4); bottom: 36px; width: 424px; height: 148px;
+  padding: var(--a2) var(--a3);
+  background: rgba(8,5,3,.62);
+  border: 1px solid rgba(110,83,48,.65);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.8);
+  font-size: var(--gr-klein); line-height: 1.45;
+  overflow: hidden;
+}
+#mitschrift .reiter {
+  display: flex; gap: var(--a3); margin-bottom: var(--a1); padding-bottom: 3px;
+  border-bottom: 1px solid rgba(110,83,48,.5);
+  font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--text-sehr-leise);
+}
+#mitschrift .reiter .aktiv { color: var(--gold); }
+#mitschrift p { margin: 0 0 2px; text-shadow: 0 1px 2px #000; }
+#mitschrift .treffer { color: #FFD17A; }
+#mitschrift .erhalten { color: #E8705C; }
+#mitschrift .system { color: var(--leben-hell); }
+#mitschrift .beutezeile { color: var(--selt-selten); }
+
+/* EP-Leiste: volle Breite am unteren Rand, in 20 Blasen geteilt */
+#ep {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 28px;
+  background: linear-gradient(#1A1209, #0A0603);
+  border-top: 2px solid var(--kante);
+  box-shadow: inset 0 1px 0 rgba(216,180,106,.2);
+  padding: 6px 10px;
+}
+#ep .bett {
+  position: relative; height: 14px;
+  background: #0A0603; border: 1px solid var(--kante-dunkel);
+  box-shadow: var(--schatten-nut);
+}
+#ep .bett > i {
+  display: block; height: 100%;
+  background: linear-gradient(var(--ep-hell), var(--ep) 55%, #3A1A5A);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
+}
+#ep .blasen {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg,
+    transparent 0 calc(5% - 1px), rgba(0,0,0,.75) calc(5% - 1px) 5%);
+}
+#ep .wert {
+  position: absolute; left: 0; right: 0; top: 0; height: 14px;
+  display: grid; place-items: center;
+  font-size: 11px; font-weight: 700; color: var(--weiss); text-shadow: 0 1px 2px #000, 0 0 3px #000;
+}
+
+/* =========================================================================
+   Weltanzeigen: Namensschilder, Schadenszahlen, Beute
+   ========================================================================= */
+.welt-el { position: absolute; transform: translate(-50%, -50%); }
+
+/* Namensschild über dem Gegner: Name, darunter dünner Balken */
+.schild { width: 132px; text-align: center; }
+.schild .name {
+  font-size: var(--gr-klein); font-weight: 600; color: #FF9E8A;
+  text-shadow: 0 1px 2px #000, 0 0 4px #000, 1px 0 2px #000;
+  white-space: nowrap;
+}
+.schild .balken { height: 9px; margin-top: 2px; }
+.schild.freund .name { color: #7FE08A; }
+.schild.elite .name { color: #FFD17A; font-family: var(--schrift-titel); font-size: var(--gr-kopf); }
+.schild.elite .balken { height: 13px; border-color: #C9A24A; }
+.schild .zusatz { font-size: 11px; color: var(--eis); text-shadow: 0 1px 2px #000, 0 0 5px #000; }
+
+/* Schadenszahlen — bewusst schlicht, serifenlos, dick umrandet */
+.schaden {
+  font-family: var(--schrift); font-weight: 700; font-size: 30px; color: var(--weiss);
+  text-shadow: 0 0 3px #000, 0 2px 2px #000, 2px 0 2px #000, -2px 0 2px #000, 0 -2px 2px #000;
+  white-space: nowrap;
+}
+.schaden.krit { font-size: 48px; color: #FFD24A; }
+.schaden.krit small { display: block; margin-top: -6px; font-size: 13px; letter-spacing: .22em; color: #FFE9A8; }
+.schaden.brand { font-size: 22px; color: #FF9A3C; }
+
+/* Beuteschilder am Boden */
+.beute {
+  transform: translate(-50%, -100%);
+  padding: 2px 9px 3px; white-space: nowrap;
+  font-size: var(--gr-klein); font-weight: 600;
+  background: rgba(6,4,2,.86);
+  border: 1px solid currentColor;
+  box-shadow: 0 2px 6px rgba(0,0,0,.75);
+}
+.beute.gewoehnlich { color: var(--selt-gewoehnlich); }
+.beute.magisch     { color: var(--selt-ungewoehnlich); }
+.beute.selten      { color: var(--selt-selten); border-width: 2px; box-shadow: 0 0 10px rgba(95,174,255,.35), 0 2px 6px rgba(0,0,0,.75); }
+.beute.gold        { color: var(--gold); border-color: rgba(240,200,96,.5); }
+
+/* Questgeber */
+.questzeichen {
+  font-family: var(--schrift-titel); font-size: 46px; color: #FFD23A;
+  text-shadow: 0 0 10px rgba(255,190,40,.9), 0 2px 2px #000, 0 0 3px #000;
+  transform: translate(-50%, -100%);
+}
+
+/* =========================================================================
+   Inventar
+   ========================================================================= */
+#inventar {
+  --anzeige: flex;
+  position: absolute; left: 150px; top: 50%; transform: translateY(-50%);
+  width: 980px;
+}
+#inventar .spalte-held { width: 388px; border-right: 2px solid var(--kante); }
+#inventar .spalte-tasche { flex: 1; }
+#inventar .inhalt { padding: var(--a4); }
+
+.ausruestung { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--a2); }
+.ausruestung .platz {
+  position: relative; height: 68px;
+  background: linear-gradient(#1A1209, #0C0805);
+  border: 2px solid rgba(110,83,48,.55);
+  box-shadow: inset 0 0 10px rgba(0,0,0,.8);
+}
+.ausruestung .platz > span {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #5E4E38;
+}
+.ausruestung .platz.belegt { border-color: var(--selt-ungewoehnlich); }
+.ausruestung .platz.belegt svg { position: absolute; inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); }
+
+.werte { margin-top: var(--a4); }
+.werte .zeile {
+  display: flex; justify-content: space-between; gap: var(--a3);
+  padding: 3px 0; border-bottom: 1px solid rgba(110,83,48,.3);
+  font-size: var(--gr-klein);
+}
+.werte .zeile b { color: var(--weiss); font-weight: 700; }
+.werte .zeile .plus { color: var(--besser); }
+
+.taschenraster { display: grid; grid-template-columns: repeat(8, var(--feld)); gap: 6px; }
+.taschenraster .feld { cursor: default; }
+.taschenraster .feld.leer { background: linear-gradient(#17100A, #0A0604); border-color: rgba(110,83,48,.4); box-shadow: inset 0 0 8px rgba(0,0,0,.8); }
+.taschenraster .feld.r-gewoehnlich { border-color: #8A8070; }
+.taschenraster .feld.r-magisch     { border-color: var(--selt-ungewoehnlich); }
+.taschenraster .feld.r-selten      { border-color: var(--selt-selten); box-shadow: var(--schatten-feld), 0 0 8px rgba(95,174,255,.4); }
+.taschenraster .feld.r-episch      { border-color: var(--selt-episch); box-shadow: var(--schatten-feld), 0 0 8px rgba(201,140,255,.4); }
+.taschenraster .feld.r-legendaer   { border-color: var(--selt-legendaer); box-shadow: var(--schatten-feld), 0 0 9px rgba(255,162,60,.45); }
+.taschenraster .feld.gewaehlt      { border-color: var(--kante-aktiv); box-shadow: 0 0 0 2px rgba(232,192,99,.5), 0 0 12px rgba(232,192,99,.45); }
+
+.seltenheitsschluessel { display: flex; flex-wrap: wrap; gap: var(--a3); margin-top: var(--a3); font-size: 12px; }
+.seltenheitsschluessel span { display: flex; align-items: center; gap: 5px; color: var(--text-leise); }
+.seltenheitsschluessel i { width: 11px; height: 11px; border: 2px solid currentColor; }
+
+/* =========================================================================
+   Tooltip mit Vergleich
+   ========================================================================= */
+#tt-vergleich { position: absolute; left: 1152px; top: 398px; }
+#tt-neu       { position: absolute; left: 1498px; top: 360px; }
+#zeiger       { position: absolute; left: 584px; top: 326px; filter: drop-shadow(0 3px 3px rgba(0,0,0,.8)); }
+
+.tooltip {
+  width: 332px;
+  background: rgba(10,7,4,.96);
+  border: 2px solid var(--kante);
+  box-shadow: 0 0 0 1px var(--kante-dunkel), 0 10px 30px rgba(0,0,0,.85);
+  font-size: var(--gr-klein);
+}
+.tooltip .tt-kopf { padding: var(--a2) var(--a3); border-bottom: 1px solid rgba(110,83,48,.6); }
+.tooltip .tt-name { font-family: var(--schrift-titel); font-size: 19px; line-height: 1.2; }
+.tooltip .tt-art { font-size: 12px; color: var(--text-leise); }
+.tooltip .tt-block { padding: var(--a2) var(--a3); border-bottom: 1px solid rgba(110,83,48,.35); }
+.tooltip .tt-block:last-child { border-bottom: none; }
+.tooltip .tt-zeile { display: flex; justify-content: space-between; gap: var(--a3); }
+.tooltip .tt-zeile b { color: var(--weiss); font-weight: 700; }
+.tooltip .d { font-size: 12px; font-weight: 700; }
+.tooltip .d.auf { color: var(--besser); }
+.tooltip .d.ab  { color: var(--schlechter); }
+.tooltip .implizit { color: #9FD8FF; }
+.tooltip .affix { color: var(--selt-ungewoehnlich); }
+.tooltip .spruch { color: #C08A4A; font-style: italic; }
+.tooltip .bedarf { color: var(--text-sehr-leise); font-size: 12px; }
+.tooltip.r-selten    .tt-name { color: var(--selt-selten); }
+.tooltip.r-selten    { border-color: #3E6E9E; }
+.tooltip.r-magisch   .tt-name { color: var(--selt-ungewoehnlich); }
+.tooltip.vergleich   { opacity: .96; }
+.tooltip .vergleich-marke {
+  padding: 3px var(--a3); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--text-sehr-leise); background: rgba(0,0,0,.5); border-bottom: 1px solid rgba(110,83,48,.4);
+}
+
+/* =========================================================================
+   Schriftrollen-Fenster
+   ========================================================================= */
+#schriftrolle {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 800px;
+}
+#schriftrolle .pergament {
+  margin: var(--a4);
+  padding: var(--a6) 44px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(90,64,30,.35), transparent 60%),
+    linear-gradient(#2A1F12, #1A1209 60%, #241A0E);
+  border: 1px solid rgba(110,83,48,.7);
+  box-shadow: inset 0 0 50px rgba(0,0,0,.8);
+}
+.runenzeile {
+  font-family: var(--schrift-runen);
+  font-size: 24px; line-height: 1.85; letter-spacing: .1em;
+  white-space: nowrap;
+  color: #9C8666;  /* 5,1:1 auf dem Pergamentgrund – unleserlich, aber nicht unsichtbar */
+  text-align: center;
+  text-shadow: 0 1px 1px rgba(0,0,0,.7);
+  word-break: break-word;
+}
+.runenzeile .glimmt {
+  color: #FFD98A;
+  text-shadow: 0 0 10px rgba(255,200,100,.85), 0 0 22px rgba(255,170,50,.5), 0 1px 2px #000;
+}
+#schriftrolle .hinweis {
+  margin: 0 var(--a4) var(--a4); padding: var(--a3) var(--a4);
+  background: rgba(0,0,0,.4); border-left: 3px solid var(--kante);
+  font-size: var(--gr-text); color: var(--text-leise);
+}
+#schriftrolle .hinweis b { color: var(--text); font-weight: 400; }
+#schriftrolle .fortschritt {
+  display: flex; align-items: center; gap: var(--a3);
+  margin: 0 var(--a4) var(--a4);
+  font-size: var(--gr-klein); color: var(--text-leise);
+}
+#schriftrolle .fortschritt .balken { flex: 1; height: 10px; }
+
+/* =========================================================================
+   Wegweiser
+   ========================================================================= */
+#wegweiser { position: absolute; left: 50%; top: 318px; transform: translateX(-50%); width: 596px; }
+#wegweiser .arme { padding: var(--a3); }
+.arm {
+  display: flex; align-items: center; gap: var(--a3);
+  padding: var(--a3);
+  border: 1px solid rgba(110,83,48,.45);
+  background: linear-gradient(90deg, rgba(0,0,0,.35), transparent);
+  margin-bottom: var(--a2);
+}
+.arm:last-child { margin-bottom: 0; }
+.arm .sinnbild { flex: 0 0 48px; height: 48px; display: grid; place-items: center; color: var(--text-leise); }
+.arm .sinnbild svg { width: 42px; height: 42px; }
+.arm .text { flex: 1; }
+.arm .ziel { font-family: var(--schrift-titel); font-size: 19px; color: var(--text); }
+.arm .grund { font-size: var(--gr-klein); color: var(--text-leise); }
+.arm .marke {
+  flex: 0 0 auto; padding: 3px 10px;
+  font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  border: 1px solid currentColor;
+}
+.arm.gesperrt { opacity: .72; }
+.arm.gesperrt .ziel { color: var(--text-leise); }
+.arm.gesperrt .marke { color: var(--schlechter); }
+.arm.offen { border-color: rgba(76,168,90,.6); background: linear-gradient(90deg, rgba(47,125,60,.22), transparent); }
+.arm.offen .ziel { color: #9BE8A8; }
+.arm.offen .marke { color: var(--besser); }
+.arm.offen .sinnbild { color: #9BE8A8; }
+
+/* Hinweis in der Welt */
+.weltknopf {
+  --anzeige: flex;
+  transform: translate(-50%, -50%);
+  align-items: center; gap: var(--a2);
+  padding: 5px var(--a3);
+  background: rgba(8,5,3,.88);
+  border: 2px solid var(--kante);
+  box-shadow: 0 0 0 1px var(--kante-dunkel), 0 3px 10px rgba(0,0,0,.8);
+  font-size: var(--gr-text); color: var(--text); white-space: nowrap;
+}
+.weltknopf kbd {
+  display: grid; place-items: center; min-width: 24px; height: 24px; padding: 0 5px;
+  font-family: var(--schrift); font-size: var(--gr-klein); font-weight: 700; color: var(--grund);
+  background: linear-gradient(#F0C860, #B98A28); border: 1px solid #6E4E12;
+}
+
+/* Questmeldung */
+#questmeldung {
+  position: absolute; left: 50%; top: 150px; transform: translateX(-50%);
+  width: 520px; padding: var(--a3) var(--a4); text-align: center;
+}
+#questmeldung .marke {
+  font-family: var(--schrift-titel); font-size: var(--gr-klein); letter-spacing: .14em;
+  text-transform: uppercase; color: var(--gold);
+}
+#questmeldung .name { font-family: var(--schrift-titel); font-size: 21px; color: var(--text); margin-top: 2px; }
+#questmeldung .ziel { font-size: var(--gr-text); color: var(--text-leise); margin-top: var(--a1); }
