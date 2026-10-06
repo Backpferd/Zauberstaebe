@@ -1,7 +1,8 @@
 # Zauberstäbe – Plan bis zum ersten spielbaren Gebiet
 
-> Stand: 06.10.2026 · Status: **Entwurf, wartet auf deine Freigabe**
+> Stand: 06.10.2026 · Status: **freigegeben, Welle 0 läuft**
 > Ziel: ein kleines, komplett spielbares Gebiet (ca. 10–15 Minuten Spielzeit), das du im Browser testen kannst.
+> Deine Antworten auf Abschnitt 8 sind eingearbeitet (siehe dort und in `CLAUDE.md`).
 
 ## Kurzfassung
 
@@ -258,6 +259,7 @@ Gut zu wissen:
 
 - Claude Code erlaubt bis zu 20 Agenten gleichzeitig. Wir nutzen höchstens 6, weil sonst die 4 CPU-Kerne für Builds und Browsertests nicht reichen.
 - Die Stufe lässt sich nur über die Agent-Definition festlegen, nicht beim Aufruf. Deshalb gibt es oben pro Stufe einen eigenen Agenten.
+- **Wichtig:** Eine neu angelegte Agent-Definition steht erst ab der **nächsten Sitzung** zur Verfügung. Die Definitionen sind am 06.10.2026 entstanden, deshalb liefen die beiden ersten Aufgaben der Welle 0 noch über `general-purpose` mit `model`-Override und ohne feste Stufe. Ab der nächsten Sitzung greifen die Namen aus der Tabelle oben.
 - Für sehr große Aufgaben gäbe es noch skriptgesteuerte *Workflows* mit Dutzenden Agenten. Für Gebiet 1 brauchen wir das nicht. Ich setze sie nur ein, wenn du es ausdrücklich willst, weil sie entsprechend mehr Kontingent verbrauchen.
 
 ---
@@ -273,13 +275,26 @@ Gut zu wissen:
 
 ---
 
-## 8. Was ich von dir brauche
+## 8. Deine Entscheidungen ✅
 
-1. **Plan freigeben** oder sagen, was du anders willst.
-2. **Steuerung:** WASD + Maus zielen (meine Empfehlung) oder klassisch Klicken zum Laufen?
-3. **Oberfläche:** Was genau hat dich gestört? Und welche Spiel-Oberfläche gefällt dir, z. B. PoE 2, Diablo 4, WoW Classic oder Gothic? Daraus baue ich in Aufgabe 0.5 drei Varianten.
-4. **Namen** (optional, sonst nehme ich diese): Dorf **„Erlengrund“**, Berge **„Grauzahn-Pass“**, Wald **„Wildholz“**, Boss **„Grimmzahn“**.
-5. **Testlink:** Einmalig GitHub Pages einschalten: im Repository *Settings → Pages → Source: „GitHub Actions“*. Außerdem: Darf ich fertige Stände selbst nach `main` übernehmen, oder klickst du jeweils auf „Merge“? Alternativ kann ich Testversionen auch als privaten claude.ai-Link veröffentlichen, dann entfällt beides.
+Am 06.10.2026 beantwortet, alles eingearbeitet:
+
+| Frage | Deine Entscheidung | Folge für den Plan |
+| --- | --- | --- |
+| **Plan** | freigegeben | Welle 0 gestartet |
+| **Steuerung** | **WASD + Maus zielen**, Leertaste ausweichen | Aufgabe 1.1 baut nur dieses Schema, kein Klick-zum-Laufen |
+| **Oberfläche** | Vorbilder **WoW Classic** und **Diablo 4** | Aufgabe 0.5 liefert drei Varianten: A „Classic“ (WoW), B „Modern“ (D4), C „Wildholz“ (eigene Mischung). Du wählst eine, daraus wird der Stilleitfaden für 2.3, 2.4, 2.5 und 3.2 |
+| **Namen** | übernommen | Dorf **Erlengrund**, Berge **Grauzahn-Pass**, Wald **Wildholz**, Boss **Grimmzahn** |
+| **Testlink & Merge** | ich mache alles selbst, volle Berechtigung | GitHub Pages richte ich ein, fertige Wellen führe ich selbst nach `main` zusammen, keine Rückfrage pro Welle |
+
+### Was noch von dir kommt
+
+Nur noch Rückmeldung, kein Einrichten mehr:
+
+1. **Eine der drei UI-Varianten auswählen**, sobald die Screenshots aus Aufgabe 0.5 vorliegen.
+2. **Mini-Test nach Welle 1** (optional): durchs Gebiet laufen, Steuerung und Look prüfen.
+3. **Mini-Test nach Welle 2**: kämpfen, Beute sammeln, Inventar ausprobieren.
+4. **Testlauf nach Welle 4** mit Fehlerliste.
 
 ---
 
