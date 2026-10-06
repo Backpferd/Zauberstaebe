@@ -1,3 +1,12 @@
+node_modules
+dist
+test-results
+playwright-report
+.vite
+*.tsbuildinfo
+
+# Playwright-Screenshots entstehen bei jedem Lauf neu (die CI lädt sie als Artefakt hoch)
+tests/e2e/screenshots/*.png
+
+# Arbeitskopien der Agenten
 .claude/worktrees/
-node_modules/
-dist/

@@ -1,0 +1,14 @@
+node_modules
+dist
+test-results
+playwright-report
+.vite
+package-lock.json
+tests/e2e/screenshots
+
+# Referenz und Plandateien bleiben unverändert
+konzept
+PLAN.md
+CLAUDE.md
+Zauberstabliste
+.claude

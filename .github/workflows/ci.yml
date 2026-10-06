@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# Neuere Läufe desselben Zweigs ersetzen ältere.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pruefen:
+    name: Prüfen, bauen, testen
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Code holen
+        uses: actions/checkout@v4
+
+      - name: Node 22 einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Abhängigkeiten installieren
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Formatierung prüfen
+        run: npm run format:check
+
+      - name: Typen prüfen
+        run: npm run typecheck
+
+      - name: Logiktests (Vitest)
+        run: npm test
+
+      - name: Bauen
+        run: npm run build
+
+      - name: Chromium für Playwright installieren
+        run: npx playwright install --with-deps chromium
+
+      - name: Browsertests (Playwright)
+        run: npm run test:e2e
+
+      - name: Screenshots als Artefakt hochladen
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: tests/e2e/screenshots/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Playwright-Bericht hochladen (bei Fehlern)
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-bericht
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
