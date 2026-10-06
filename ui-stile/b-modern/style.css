@@ -1,0 +1,520 @@
+/* ===========================================================================
+   VARIANTE B — „MODERN“
+   Stilleitfaden für die Oberfläche von „Zauberstäbe“
+   Vorbild: Diablo IV. Schwarz, durchscheinend, haarfeine Linien, kaum Farbe.
+   Die Oberfläche klebt an den Bildrändern, die Mitte bleibt frei fürs Spiel.
+
+   Regeln, die diese Variante zusammenhalten:
+   1. Es gibt genau EINE Akzentfarbe (--akzent). Alles andere ist Knochenweiß,
+      Grau oder eine Zustandsfarbe (Leben, Mana, Seltenheit).
+   2. Rahmen sind immer 1 px und nie heller als rgba(255,255,255,.22).
+      Keine Prägung, keine Lichtkante, kein Metall.
+   3. Flächen sind Schwarz mit Deckkraft, nie ein Verlauf mit zwei Farbtönen.
+   4. Geschlossene Umrisse statt gefüllter Symbole.
+   Die Kontrastwerte sind gemessen (WCAG 2.1), alle Textpaare über 4,5:1.
+   =========================================================================== */
+
+:root {
+  /* --- Flächen ----------------------------------------------------------- */
+  --schwarz:      #0A0B0D;                 /* Fenstergrund, deckend           */
+  --glas:         rgba(10,11,13,.80);      /* Panel über dem Bild             */
+  --glas-leicht:  rgba(10,11,13,.55);      /* Leisten, Minikarte              */
+  --glas-tief:    rgba(10,11,13,.92);      /* Tooltip, Fenster                */
+  --fach:         rgba(255,255,255,.045);  /* Feld, Zeile, leerer Platz       */
+  --fach-aktiv:   rgba(255,255,255,.10);
+
+  /* --- Linien ------------------------------------------------------------- */
+  --linie:        rgba(255,255,255,.12);   /* Standard, 1 px                  */
+  --linie-stark:  rgba(255,255,255,.22);   /* Feldrand, Fensterrand           */
+  --linie-leise:  rgba(255,255,255,.07);   /* Trenner innerhalb eines Fensters*/
+
+  /* --- Schrift ------------------------------------------------------------ */
+  --text:         #EDE6D6;  /* 15,8:1 auf --schwarz                           */
+  --text-leise:   #A9A294;  /*  7,8:1 auf --schwarz                           */
+  --text-sehr-leise: #78736A; /* nur Hintergrundangaben, nie allein stehend   */
+  --akzent:       #D8B36A;  /*  9,9:1 — einzige warme Farbe der Oberfläche    */
+
+  /* --- Zustandsfarben ----------------------------------------------------- */
+  --leben:        #8C1B22;
+  --leben-hell:   #C0292F;
+  --mana:         #1F5280;
+  --mana-hell:    #2E79B8;
+  --feind:        #B02A22;
+  --gefahr:       #E2503A;
+  --eis:          #9FE0F5;
+
+  /* --- Seltenheiten (Kontrast gegen --schwarz) ---------------------------- */
+  --selt-gewoehnlich: #E6E2D8; /* 15,2:1 */
+  --selt-magisch:     #7FB2FF; /*  9,1:1 */
+  --selt-selten:      #F0CE5A; /* 12,8:1 */
+  --selt-legendaer:   #F09048; /*  8,2:1 */
+  --selt-einzigartig: #C98BE8; /*  7,8:1 */
+
+  --besser:       #6FD188;
+  --schlechter:   #E8705C;
+
+  /* --- Schriften ---------------------------------------------------------- */
+  /* Spectral (OFL) ist die schlanke, moderne Serifenschrift der Variante.
+     Barlow Semi Condensed (OFL) trägt ausschließlich Tastenkürzel, Zähler und
+     Abklingzeiten – überall dort, wo eine Serifenschrift zu weich wäre.       */
+  --schrift:       'Spectral', Georgia, serif;
+  --schrift-eng:   'Barlow Semi Condensed', system-ui, sans-serif;
+  --schrift-runen: 'Noto Sans Runic', serif;
+
+  --gr-titel:  24px;
+  --gr-kopf:   18px;
+  --gr-text:   16px;
+  --gr-klein:  14px;
+  --gr-winzig: 12px;
+  --zeile:     1.55;
+  --sperrung:  .16em;   /* Versalzeilen bekommen immer diese Sperrung         */
+
+  /* --- Abstandsraster: Vielfache von 4 px, großzügig ---------------------- */
+  --a1:  4px;  --a2:  8px;  --a3: 12px;  --a4: 16px;
+  --a5: 20px;  --a6: 24px;  --a8: 32px;  --a10: 40px;
+
+  /* --- Radien: fast eckig, nur gebrochene Kanten -------------------------- */
+  --r-feld:   3px;
+  --r-panel:  4px;
+  --r-pille: 999px;
+
+  /* --- Schatten: nur Tiefe, nie Glanz ------------------------------------ */
+  --schatten:      0 12px 40px rgba(0,0,0,.6);
+  --schatten-text: 0 1px 3px rgba(0,0,0,.95), 0 0 10px rgba(0,0,0,.7);
+
+  /* --- Größen ------------------------------------------------------------- */
+  --feld:       58px;   /* Zauberfeld                                         */
+  --feld-klein: 44px;   /* Gegenstandsfeld im Rucksack                        */
+  --kugel:     104px;   /* Lebens-/Manakugel, flach                           */
+}
+
+/* =========================================================================
+   Grundgerüst
+   ========================================================================= */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+
+body {
+  position: relative;
+  width: 1920px; height: 1080px;
+  font-family: var(--schrift);
+  font-size: var(--gr-text); line-height: var(--zeile);
+  font-weight: 400;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+#buehne { position: absolute; inset: 0; background: #05080a url('../hintergrund.png') center / cover no-repeat; }
+#vignette {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 74% at 50% 46%, transparent 54%, rgba(0,0,0,.52) 100%),
+    linear-gradient(to top, rgba(0,0,0,.45) 0, transparent 160px);
+}
+/* Feste Ebenenfolge: Welt < HUD < Abdunkelung < Fenster. */
+.ebene { position: absolute; inset: 0; pointer-events: none; }
+#welt { z-index: 1; }
+#hud { z-index: 2; }
+#schleier { z-index: 3; }
+#inventar, .tooltip, #schriftrolle, #wegweiser, #questmeldung { z-index: 4; }
+
+html [data-nur] { display: none; }
+html[data-szene='hud']          [data-nur~='hud'],
+html[data-szene='inventar']     [data-nur~='inventar'],
+html[data-szene='schriftrolle'] [data-nur~='schriftrolle'],
+html[data-szene='wegweiser']    [data-nur~='wegweiser'] { display: var(--anzeige, block); }
+
+#schleier { position: absolute; inset: 0; background: rgba(2,3,4,.62); }
+
+/* =========================================================================
+   Bausteine
+   ========================================================================= */
+.panel {
+  background: var(--glas-tief);
+  border: 1px solid var(--linie-stark);
+  border-radius: var(--r-panel);
+  box-shadow: var(--schatten);
+}
+.versal {
+  font-size: var(--gr-winzig); letter-spacing: var(--sperrung); text-transform: uppercase;
+  color: var(--text-leise);
+}
+.titel { font-size: var(--gr-titel); font-weight: 300; letter-spacing: .02em; }
+.leise { color: var(--text-leise); }
+.eng { font-family: var(--schrift-eng); }
+
+/* Feld */
+.feld {
+  position: relative;
+  width: var(--feld); height: var(--feld);
+  background: var(--fach);
+  border: 1px solid var(--linie-stark);
+  border-radius: var(--r-feld);
+}
+.feld svg { position: absolute; inset: 11px; width: calc(100% - 22px); height: calc(100% - 22px); color: var(--text); }
+.feld.aktiv { border-color: rgba(237,230,214,.6); background: var(--fach-aktiv); }
+.feld .abkling {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  background: rgba(4,5,6,.74); border-radius: var(--r-feld);
+  font-family: var(--schrift-eng); font-size: 22px; font-weight: 500; color: var(--text);
+}
+.feld .anzahl {
+  position: absolute; right: 4px; bottom: 1px;
+  font-family: var(--schrift-eng); font-size: var(--gr-klein); font-weight: 600; color: var(--text);
+}
+.taste {
+  margin-top: 5px; text-align: center;
+  font-family: var(--schrift-eng); font-size: var(--gr-winzig); font-weight: 500;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--text-leise);
+  text-shadow: var(--schatten-text);
+}
+
+/* Balken: immer 1 px Rahmen, flache Füllung, keine Verläufe mit Glanz */
+.balken {
+  position: relative; overflow: hidden;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--linie);
+}
+.balken > i { display: block; height: 100%; }
+.f-leben > i { background: var(--leben-hell); }
+.f-mana  > i { background: var(--mana-hell); }
+.f-feind > i { background: var(--feind); }
+.f-akzent > i { background: var(--akzent); }
+
+/* =========================================================================
+   Bossleiste oben Mitte
+   ========================================================================= */
+#boss { --anzeige: block; position: absolute; left: 50%; top: 34px; transform: translateX(-50%); width: 680px; text-align: center; }
+#boss .name {
+  font-size: 20px; font-weight: 300; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text); text-shadow: var(--schatten-text);
+}
+#boss .leiste { height: 7px; margin-top: var(--a3); background: rgba(0,0,0,.6); border: 1px solid var(--linie-stark); }
+#boss .leiste > i { background: linear-gradient(90deg, #8C1B22, #C0292F); }
+#boss .unterzeile {
+  display: flex; align-items: center; justify-content: center; gap: var(--a4);
+  margin-top: var(--a3);
+}
+#boss .zustand {
+  display: flex; align-items: center; gap: 6px;
+  padding: 3px var(--a2); border: 1px solid var(--linie); border-radius: var(--r-pille);
+  background: rgba(0,0,0,.45);
+  font-size: var(--gr-winzig); letter-spacing: .1em; text-transform: uppercase; color: var(--text-leise);
+}
+#boss .zustand svg { width: 14px; height: 14px; color: var(--gefahr); }
+#boss .zahl {
+  position: absolute; right: -58px; top: 40px;
+  font-family: var(--schrift-eng); font-size: var(--gr-klein); color: var(--text-leise);
+}
+
+/* =========================================================================
+   Minikarte und Aufgaben oben rechts
+   ========================================================================= */
+#oben-rechts { position: absolute; right: var(--a8); top: var(--a6); width: 268px; text-align: right; }
+#minikarte {
+  position: relative; height: 172px;
+  background: var(--glas-leicht);
+  border: 1px solid var(--linie);
+  border-radius: var(--r-panel);
+  overflow: hidden;
+}
+#minikarte svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+#oben-rechts .ort { margin-top: var(--a3); }
+#oben-rechts .ort .zone { font-size: var(--gr-kopf); font-weight: 300; letter-spacing: .1em; text-transform: uppercase; text-shadow: var(--schatten-text); }
+#oben-rechts .ort .teil { font-size: var(--gr-klein); color: var(--text-leise); text-shadow: var(--schatten-text); }
+
+#quests { margin-top: var(--a6); padding-top: var(--a4); border-top: 1px solid var(--linie); }
+.quest { margin-bottom: var(--a4); }
+.quest:last-child { margin-bottom: 0; }
+.quest .q-name { font-size: var(--gr-text); color: var(--text); text-shadow: var(--schatten-text); }
+.quest .q-schritt {
+  font-size: var(--gr-klein); color: var(--text-leise); text-shadow: var(--schatten-text);
+}
+.quest .q-schritt b { color: var(--text); font-weight: 400; font-family: var(--schrift-eng); }
+.quest .q-schritt.erledigt { color: var(--text-sehr-leise); }
+.quest .q-schritt.erledigt::after { content: ' ✓'; color: var(--besser); }
+
+/* =========================================================================
+   Unteres Feld: Kugeln, Zauber, Trank
+   ========================================================================= */
+#unten {
+  position: absolute; left: 50%; bottom: 62px; transform: translateX(-50%);
+  display: flex; align-items: flex-end; gap: var(--a8);
+}
+
+.kugel { position: relative; width: var(--kugel); height: var(--kugel); }
+.kugel .schale {
+  position: absolute; inset: 0; border-radius: 50%; overflow: hidden;
+  background: rgba(6,7,9,.78);
+  border: 1px solid var(--linie-stark);
+}
+.kugel .fuellung { position: absolute; left: 0; right: 0; bottom: 0; }
+.kugel.leben .fuellung { background: var(--leben); }
+.kugel.mana  .fuellung { background: var(--mana); }
+.kugel .fuellung::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: rgba(255,255,255,.4);
+}
+.kugel .wert {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-family: var(--schrift-eng); font-size: 26px; font-weight: 500; color: #FFFFFF;
+  text-shadow: var(--schatten-text);
+}
+.kugel .max {
+  position: absolute; left: 0; right: 0; bottom: -22px; text-align: center;
+  font-family: var(--schrift-eng); font-size: var(--gr-winzig); letter-spacing: .08em;
+  color: var(--text-leise); text-shadow: var(--schatten-text);
+}
+.kugel .stufe {
+  position: absolute; left: -34px; bottom: 6px;
+  width: 30px; height: 30px; display: grid; place-items: center;
+  border: 1px solid var(--linie-stark); border-radius: 50%;
+  background: rgba(6,7,9,.8);
+  font-family: var(--schrift-eng); font-size: var(--gr-klein); font-weight: 600; color: var(--akzent);
+}
+
+#zauber { display: flex; align-items: flex-end; gap: var(--a3); }
+#zauber .zelle { width: var(--feld); }
+#zauber .trennlinie { width: 1px; height: 46px; margin: 0 var(--a1) 14px; background: var(--linie); }
+
+#staerkungen { position: absolute; left: 586px; bottom: 196px; display: flex; gap: var(--a3); }
+.staerkung {
+  display: flex; align-items: center; gap: 6px;
+  padding: 3px var(--a2); border: 1px solid var(--linie); border-radius: var(--r-pille);
+  background: rgba(6,7,9,.6);
+  font-family: var(--schrift-eng); font-size: var(--gr-winzig); letter-spacing: .08em;
+  text-transform: uppercase; color: var(--text-leise);
+}
+.staerkung svg { width: 15px; height: 15px; color: var(--text); }
+
+/* Erfahrung: eine Haarlinie am unteren Bildrand, mehr nicht */
+#ep { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,.06); }
+#ep > i { display: block; height: 100%; background: var(--akzent); box-shadow: 0 0 10px rgba(216,179,106,.5); }
+#ep .wert {
+  position: absolute; right: var(--a8); bottom: var(--a2);
+  font-family: var(--schrift-eng); font-size: var(--gr-winzig); letter-spacing: .1em;
+  color: var(--text-sehr-leise); text-shadow: var(--schatten-text);
+}
+
+/* =========================================================================
+   Weltanzeigen
+   ========================================================================= */
+.welt-el { position: absolute; transform: translate(-50%, -50%); }
+
+.gegner { width: 92px; text-align: center; }
+.gegner .leiste { height: 3px; background: rgba(0,0,0,.55); border: none; }
+.gegner .leiste > i { background: var(--gefahr); }
+.gegner .name {
+  margin-bottom: 5px;
+  font-family: var(--schrift-eng); font-size: var(--gr-winzig); letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text); text-shadow: var(--schatten-text);
+  white-space: nowrap;
+}
+.gegner .zusatz { margin-top: 4px; font-family: var(--schrift-eng); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--eis); text-shadow: var(--schatten-text); }
+
+.schaden {
+  font-family: var(--schrift); font-weight: 300; font-size: 34px; color: #FFFFFF;
+  text-shadow: 0 2px 6px rgba(0,0,0,.95), 0 0 14px rgba(0,0,0,.8);
+  white-space: nowrap;
+}
+.schaden.krit { font-size: 54px; color: #FFE6B0; }
+.schaden.krit small { display: block; margin-top: -4px; font-family: var(--schrift-eng); font-size: 12px; letter-spacing: .3em; color: var(--text); text-align: center; text-shadow: var(--schatten-text); }
+.schaden.brand { font-size: 24px; color: #FFB884; }
+
+.beute {
+  --anzeige: flex;
+  transform: translate(-50%, -100%);
+  display: flex; align-items: center; gap: 7px;
+  padding: 3px var(--a3) 4px; white-space: nowrap;
+  background: rgba(6,7,9,.7); border-radius: var(--r-pille);
+  font-size: var(--gr-klein); text-shadow: var(--schatten-text);
+}
+.beute::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.beute.gewoehnlich { color: var(--selt-gewoehnlich); }
+.beute.magisch     { color: var(--selt-magisch); }
+.beute.selten      { color: var(--selt-selten); }
+.beute.legendaer   { color: var(--selt-legendaer); }
+.beute.gold        { color: var(--text-leise); }
+
+.questzeichen {
+  transform: translate(-50%, -100%);
+  font-family: var(--schrift); font-size: 40px; font-weight: 300; color: var(--akzent);
+  text-shadow: 0 0 14px rgba(216,179,106,.75), 0 2px 4px rgba(0,0,0,.9);
+}
+.npcname {
+  transform: translate(-50%, -50%);
+  font-family: var(--schrift-eng); font-size: var(--gr-winzig); letter-spacing: .14em;
+  text-transform: uppercase; color: var(--text-leise); text-shadow: var(--schatten-text);
+  white-space: nowrap;
+}
+
+/* =========================================================================
+   Inventar
+   ========================================================================= */
+#inventar {
+  --anzeige: flex;
+  position: absolute; left: 112px; top: 50%; transform: translateY(-50%);
+  width: 1160px;
+}
+#tt-neu       { position: absolute; left: 1312px; top: 118px; }
+#tt-vergleich { position: absolute; left: 1312px; top: 606px; }
+#inventar .spalte { padding: var(--a8); }
+#inventar .spalte-held { width: 430px; border-right: 1px solid var(--linie-leise); }
+#inventar .spalte-tasche { flex: 1; display: flex; flex-direction: column; }
+#inventar h2 {
+  margin: 0 0 var(--a5);
+  font-size: var(--gr-winzig); font-weight: 400; letter-spacing: var(--sperrung);
+  text-transform: uppercase; color: var(--text-leise);
+}
+#inventar .held-name { margin: -6px 0 var(--a6); font-size: 26px; font-weight: 300; letter-spacing: .04em; }
+#inventar .held-name small { display: block; font-family: var(--schrift-eng); font-size: var(--gr-winzig); letter-spacing: var(--sperrung); text-transform: uppercase; color: var(--text-leise); }
+
+.ausruestung { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--a2); }
+.ausruestung .platz {
+  position: relative; height: 76px;
+  background: var(--fach); border: 1px solid var(--linie-leise); border-radius: var(--r-feld);
+}
+.ausruestung .platz > span {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-family: var(--schrift-eng); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--text-sehr-leise);
+}
+.ausruestung .platz.belegt { border-color: var(--selt-magisch); background: rgba(127,178,255,.07); }
+.ausruestung .platz.belegt svg { position: absolute; inset: 14px; width: calc(100% - 28px); height: calc(100% - 28px); color: var(--selt-magisch); }
+
+.werte { margin-top: var(--a6); }
+.werte .zeile { display: flex; justify-content: space-between; gap: var(--a4); padding: 6px 0; border-bottom: 1px solid var(--linie-leise); font-size: var(--gr-klein); color: var(--text-leise); }
+.werte .zeile b { font-family: var(--schrift-eng); font-size: var(--gr-text); font-weight: 500; color: var(--text); }
+.werte .zeile b.plus { color: var(--besser); }
+
+.taschenraster { display: grid; grid-template-columns: repeat(10, var(--feld-klein)); gap: var(--a2); }
+.taschenraster .feld { width: var(--feld-klein); height: var(--feld-klein); border-color: var(--linie-leise); }
+.taschenraster .feld svg { inset: 9px; width: calc(100% - 18px); height: calc(100% - 18px); }
+.taschenraster .feld.r-gewoehnlich { border-color: rgba(230,226,216,.35); }
+.taschenraster .feld.r-magisch     { border-color: rgba(127,178,255,.6); background: rgba(127,178,255,.07); }
+.taschenraster .feld.r-selten      { border-color: rgba(240,206,90,.6);  background: rgba(240,206,90,.07); }
+.taschenraster .feld.r-legendaer   { border-color: rgba(240,144,72,.65); background: rgba(240,144,72,.08); }
+.taschenraster .feld.r-einzigartig { border-color: rgba(201,139,232,.6); background: rgba(201,139,232,.07); }
+.taschenraster .feld.gewaehlt      { border-color: var(--text); box-shadow: 0 0 0 1px rgba(237,230,214,.35); }
+
+.schluessel { display: flex; flex-wrap: wrap; gap: var(--a5); margin-top: auto; padding-top: var(--a4); border-top: 1px solid var(--linie-leise); }
+.schluessel span { display: flex; align-items: center; gap: 7px; font-family: var(--schrift-eng); font-size: var(--gr-winzig); letter-spacing: .1em; text-transform: uppercase; color: var(--text-leise); }
+.schluessel i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+/* =========================================================================
+   Tooltip
+   ========================================================================= */
+.tooltip {
+  width: 352px; padding-bottom: var(--a4);
+  background: var(--glas-tief);
+  border: 1px solid var(--linie-stark);
+  border-radius: var(--r-panel);
+  box-shadow: var(--schatten);
+  font-size: var(--gr-klein);
+  overflow: hidden;
+}
+.tooltip .streifen { height: 2px; }
+.tooltip .tt-kopf { padding: var(--a4) var(--a5) var(--a3); }
+.tooltip .tt-name { font-size: 21px; font-weight: 400; line-height: 1.2; }
+.tooltip .tt-art { font-family: var(--schrift-eng); font-size: var(--gr-winzig); letter-spacing: .1em; text-transform: uppercase; color: var(--text-leise); margin-top: 2px; }
+.tooltip .tt-block { padding: var(--a3) var(--a5); border-top: 1px solid var(--linie-leise); }
+.tooltip .tt-zeile { display: flex; justify-content: space-between; gap: var(--a4); color: var(--text-leise); }
+.tooltip .tt-zeile b { font-family: var(--schrift-eng); font-size: var(--gr-text); font-weight: 500; color: var(--text); }
+.tooltip .d { font-family: var(--schrift-eng); font-size: var(--gr-winzig); font-weight: 600; }
+.tooltip .d.auf { color: var(--besser); }
+.tooltip .d.ab  { color: var(--schlechter); }
+.tooltip .implizit { color: #9FD8FF; }
+.tooltip .affix { color: var(--selt-magisch); }
+.tooltip .affix div { margin-bottom: 2px; }
+.tooltip .spruch { color: var(--text-sehr-leise); font-style: italic; }
+.tooltip .bedarf { font-family: var(--schrift-eng); font-size: var(--gr-winzig); letter-spacing: .08em; text-transform: uppercase; color: var(--text-sehr-leise); }
+.tooltip .marke { padding: var(--a2) var(--a5) 0; font-family: var(--schrift-eng); font-size: 11px; letter-spacing: var(--sperrung); text-transform: uppercase; color: var(--text-sehr-leise); }
+.tooltip.r-selten  .streifen { background: var(--selt-selten); }
+.tooltip.r-selten  .tt-name  { color: var(--selt-selten); }
+.tooltip.r-magisch .streifen { background: var(--selt-magisch); }
+.tooltip.r-magisch .tt-name  { color: var(--selt-magisch); }
+
+/* =========================================================================
+   Schriftrolle
+   ========================================================================= */
+#schriftrolle {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 860px; padding: var(--a10) 56px var(--a8);
+}
+#schriftrolle .marke { text-align: center; }
+#schriftrolle h1 {
+  margin: var(--a3) 0 var(--a10);
+  font-size: 34px; font-weight: 300; letter-spacing: .1em; text-align: center;
+}
+.runenfeld { padding: 0 0 var(--a10); }
+.runenzeile {
+  font-family: var(--schrift-runen);
+  font-size: 25px; line-height: 2.1; letter-spacing: .22em;
+  text-align: center; white-space: nowrap;
+  color: #8A857C;  /* 5,3:1 auf dem Fenstergrund */
+}
+.runenzeile .glimmt {
+  color: var(--akzent);
+  text-shadow: 0 0 14px rgba(216,179,106,.9), 0 0 32px rgba(216,179,106,.4);
+}
+#schriftrolle .hinweis {
+  max-width: 620px; margin: 0 auto var(--a6);
+  text-align: center; font-size: var(--gr-text); color: var(--text-leise);
+}
+#schriftrolle .hinweis b { color: var(--text); font-weight: 400; }
+#schriftrolle .fortschritt {
+  display: flex; align-items: center; gap: var(--a4);
+  max-width: 420px; margin: 0 auto;
+  font-family: var(--schrift-eng); font-size: var(--gr-winzig); letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text-leise);
+}
+#schriftrolle .fortschritt .balken { flex: 1; height: 2px; border: none; background: rgba(255,255,255,.1); }
+
+/* =========================================================================
+   Wegweiser
+   ========================================================================= */
+#wegweiser { position: absolute; left: 50%; top: 322px; transform: translateX(-50%); width: 640px; padding: var(--a6) var(--a6) var(--a5); }
+#wegweiser h2 { margin: 0 0 var(--a5); font-size: var(--gr-winzig); font-weight: 400; letter-spacing: var(--sperrung); text-transform: uppercase; color: var(--text-leise); }
+.arm {
+  display: flex; align-items: center; gap: var(--a4);
+  padding: var(--a3) 0;
+  border-top: 1px solid var(--linie-leise);
+}
+.arm .sinnbild { flex: 0 0 28px; color: var(--text-leise); }
+.arm .sinnbild svg { width: 28px; height: 28px; display: block; }
+.arm .text { flex: 1; }
+.arm .ziel { font-size: var(--gr-kopf); font-weight: 300; letter-spacing: .04em; }
+.arm .ziel small { font-family: var(--schrift-eng); font-size: var(--gr-winzig); letter-spacing: .12em; text-transform: uppercase; color: var(--text-sehr-leise); margin-left: var(--a2); }
+.arm .grund { font-size: var(--gr-klein); color: var(--text-leise); }
+.arm .marke { flex: 0 0 auto; font-family: var(--schrift-eng); font-size: var(--gr-winzig); letter-spacing: .14em; text-transform: uppercase; }
+.arm.gesperrt { opacity: .6; }
+.arm.gesperrt .marke { color: var(--text-sehr-leise); }
+.arm.offen .ziel { color: var(--akzent); }
+.arm.offen .sinnbild { color: var(--akzent); }
+.arm.offen .marke { color: var(--akzent); }
+
+.weltknopf {
+  --anzeige: flex;
+  transform: translate(-50%, -50%);
+  align-items: center; gap: var(--a3);
+  padding: var(--a2) var(--a4);
+  background: rgba(6,7,9,.72);
+  border: 1px solid var(--linie-stark); border-radius: var(--r-pille);
+  font-size: var(--gr-klein); color: var(--text); white-space: nowrap;
+}
+.weltknopf kbd {
+  display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  border: 1px solid var(--linie-stark);
+  font-family: var(--schrift-eng); font-size: var(--gr-winzig); font-weight: 600; color: var(--text);
+}
+
+#questmeldung {
+  position: absolute; left: 50%; top: 110px; transform: translateX(-50%);
+  width: 760px; padding: var(--a8) 0 var(--a10); text-align: center;
+  /* weiche Abdunkelung statt Panel – die Meldung bleibt lesbar, das Bild sichtbar */
+  background: radial-gradient(ellipse 60% 100% at 50% 50%, rgba(3,4,5,.88), rgba(3,4,5,0) 72%);
+}
+#questmeldung .marke { font-family: var(--schrift-eng); font-size: var(--gr-winzig); letter-spacing: .3em; text-transform: uppercase; color: var(--akzent); text-shadow: var(--schatten-text); }
+#questmeldung .strich { width: 56px; height: 1px; margin: var(--a3) auto; background: var(--linie-stark); }
+#questmeldung .name { font-size: 26px; font-weight: 300; letter-spacing: .08em; text-shadow: var(--schatten-text); }
+#questmeldung .ziel { margin-top: var(--a2); font-size: var(--gr-text); color: var(--text-leise); text-shadow: var(--schatten-text); }

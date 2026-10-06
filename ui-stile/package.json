@@ -1,0 +1,24 @@
+{
+  "name": "zauberstaebe-ui-stile",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Drei UI-Stilvarianten für das Zauberstäbe-RPG (Aufgabe 0.5)",
+  "type": "module",
+  "scripts": {
+    "screenshots": "node render.mjs",
+    "hintergrund": "node render.mjs --nur-hintergrund"
+  },
+  "dependencies": {
+    "@fontsource-variable/fraunces": "^5.2.5",
+    "@fontsource/barlow-semi-condensed": "^5.2.5",
+    "@fontsource/marcellus": "^5.2.5",
+    "@fontsource/noto-sans-runic": "^5.2.5",
+    "@fontsource/public-sans": "^5.2.5",
+    "@fontsource/source-sans-3": "^5.2.5",
+    "@fontsource/spectral": "^5.2.5",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}

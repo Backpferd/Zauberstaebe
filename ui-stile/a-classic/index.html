@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="de" data-szene="hud">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920">
+<title>Zauberstäbe – Oberfläche, Variante A „Classic“</title>
+<link rel="stylesheet" href="../node_modules/@fontsource/marcellus/latin-400.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/source-sans-3/latin-400.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/source-sans-3/latin-600.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/source-sans-3/latin-700.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/source-sans-3/latin-400-italic.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/noto-sans-runic/runic-400.css">
+<link rel="stylesheet" href="style.css">
+<script>
+  // Einzige Aufgabe des Skripts: die Szene aus der Adresszeile übernehmen
+  // (?szene=hud|inventar|schriftrolle|wegweiser) und dem Renderer melden,
+  // dass die Schriften geladen sind.
+  const erlaubt = ['hud', 'inventar', 'schriftrolle', 'wegweiser'];
+  const gewuenscht = new URLSearchParams(location.search).get('szene');
+  document.documentElement.dataset.szene = erlaubt.includes(gewuenscht) ? gewuenscht : 'hud';
+  addEventListener('DOMContentLoaded', () => {
+    document.fonts.ready.then(() => { document.body.dataset.bereit = 'ja'; });
+  });
+</script>
+</head>
+<body>
+
+<!-- ===================== Sinnbilder (einmal, überall nutzbar) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="i-feuerball" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="14.5" cy="9.5" r="5.5" fill="currentColor" fill-opacity=".9" stroke="none"/>
+    <circle cx="14.5" cy="9.5" r="5.5"/>
+    <path d="M2 21c3-3.5 5.5-6 8-8.4M3.5 16.5c2-1.5 3.5-2.8 5-4.4M7.5 21c2-2.5 3.2-4.2 4.6-6.2"/>
+  </g>
+  <g id="i-frostnova" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+    <g transform="translate(12 12)">
+      <g id="a-arm"><path d="M0 0V-9.4M0-4.6l-2.6 2.6M0-4.6l2.6 2.6M0-7.6l-1.8 1.8M0-7.6l1.8 1.8"/></g>
+      <use href="#a-arm" transform="rotate(60)"/><use href="#a-arm" transform="rotate(120)"/>
+      <use href="#a-arm" transform="rotate(180)"/><use href="#a-arm" transform="rotate(240)"/><use href="#a-arm" transform="rotate(300)"/>
+    </g>
+    <circle cx="12" cy="12" r="1.9" fill="currentColor" stroke="none"/>
+  </g>
+  <g id="i-blitz" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+    <path d="M13.5 2 6.5 13h4.4L9 22l8.4-11.4h-4.6z" fill="currentColor" fill-opacity=".75"/>
+  </g>
+  <g id="i-schild" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2.4 20 5.5v6.2c0 5.2-3.6 8.6-8 10.1-4.4-1.5-8-4.9-8-10.1V5.5z"/>
+    <path d="M12 7v10M12 9.6l3.2 2.3M12 13.6l-3.2 2.3"/>
+  </g>
+  <g id="i-rolle" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 17C5.4 7.8 14.6 4.4 19.6 9.6"/>
+    <path d="M16.2 4.6 20.4 9.8l-5.4 1"/>
+    <path d="M3.5 21h12"/>
+  </g>
+  <g id="i-meteor" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 2.5 10 10M3 8l5 4.6"/>
+    <path d="m11.2 11 5.3-1.4 4 3.8-1.4 5.3-5.3 1.5-4-3.8z" fill="currentColor" fill-opacity=".55"/>
+  </g>
+  <g id="i-heiltrank" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+    <path d="M9.5 3h5v4.4c3.4 1.5 5.3 4.5 5.3 7.8A7.8 7.8 0 0 1 4.2 15.2c0-3.3 1.9-6.3 5.3-7.8z"/>
+    <path d="M4.6 13.6c3.2-1.4 5.3 1.4 7.6 0 2-1.2 4.4 0 7.2 1" stroke-width="1.5"/>
+    <path d="M8.5 2h7" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+  <g id="i-stab" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3.4 20.6 15 9"/>
+    <path d="m14.4 8.4 2.2-2.2 1.2 1.2 2.2-2.2 1.6 1.6-2.2 2.2 1.2 1.2-2.2 2.2z" fill="currentColor" fill-opacity=".6"/>
+    <path d="M17.5 2.6v2M21.4 3.2l-1.2 1.4M13.4 5.2l1.4 1" stroke-width="1.4"/>
+  </g>
+  <g id="i-zahn" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+    <path d="M7 3h10l-1.3 7.6L12 21.4 8.3 10.6z" fill="currentColor" fill-opacity=".35"/>
+    <path d="M9.6 3.4 11 9M14.4 3.4 13 9" stroke-width="1.3"/>
+  </g>
+  <g id="i-schriftrolle" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 3.5h12v17H6z"/>
+    <path d="M6 3.5a2.4 2.4 0 0 0 0 4.8h2.2M18 20.5a2.4 2.4 0 0 0 0-4.8h-2.2"/>
+    <path d="M9 9.4h6M9 12.4h6M9 15.4h3.6"/>
+  </g>
+  <g id="i-dorf" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 11.5 9 6.4l6 5.1M4.6 10.8V20h8.8v-9.2"/>
+    <path d="M13.4 13.6h6.4V20h-6.4z"/>
+    <path d="M7.6 20v-4.2h2.8V20M16 16.4h1.4"/>
+  </g>
+  <g id="i-berg" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 19.5 9 7l4.4 7.6M11.2 19.5 16.5 10l5.5 9.5z"/>
+    <path d="M2 19.5h20M7.2 10.2h3.6"/>
+  </g>
+  <g id="i-wald" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8.5 3 3.8 10h2.6L3 15.4h11L10.6 10h2.6z"/>
+    <path d="M8.5 15.4V21"/>
+    <path d="M17 7.5 13.6 12.5h1.8L13 16.6h8L18.6 12.5h1.8zM17 16.6V21"/>
+  </g>
+  <g id="i-schloss" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+    <rect x="4.6" y="10.4" width="14.8" height="10.2" rx="1.4"/>
+    <path d="M8 10.4V7.6a4 4 0 0 1 8 0v2.8"/>
+    <circle cx="12" cy="15.3" r="1.7" fill="currentColor" stroke="none"/>
+  </g>
+  <g id="i-raserei" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m4 14 8-8 8 8M4 20l8-8 8 8"/>
+  </g>
+  <g id="i-ruf" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 9.5h3.4L12.6 5v14L7.4 14.5H4z" fill="currentColor" fill-opacity=".4"/>
+    <path d="M16 8.6a5 5 0 0 1 0 6.8M19 6a9 9 0 0 1 0 12"/>
+  </g>
+  <g id="i-dornen" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 20.5C7 16 11.5 9.5 21 3.5"/>
+    <path d="m8 14 .6-4.4M8 14l-4.3.3M14 8.6l.8-4.6M14 8.6l-4.4.4M17.6 5.6l4.4-.3"/>
+  </g>
+  <g id="i-glut" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+    <path d="M12 2.5c.4 4.4 4.8 5.8 4.8 10.6A4.9 4.9 0 0 1 12 21.4a4.9 4.9 0 0 1-4.8-8.3c.6 1.9 1.9 2.4 2.3 1.5-1.5-3.9.6-9.3 2.5-12.1z" fill="currentColor" fill-opacity=".45"/>
+  </g>
+  <g id="i-eis" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m12 2 3.4 6.4L21 12l-5.6 3.6L12 22l-3.4-6.4L3 12l5.6-3.6z" fill="currentColor" fill-opacity=".3"/>
+  </g>
+  <g id="i-beutel" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+    <path d="M5 8.5h14l1.6 12H3.4z" fill="currentColor" fill-opacity=".25"/>
+    <path d="M8.4 8.5V6.2a3.6 3.6 0 0 1 7.2 0v2.3"/>
+  </g>
+  <g id="i-pergamentfetzen" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+    <path d="m4.6 5.5 6-1.8 4.2 1.4 4.6-1.6-.8 15.4-4.2 1.6-4.4-1.5-5.8 1.8z" fill="currentColor" fill-opacity=".2"/>
+    <path d="M10.6 3.7v15.4M14.8 5.1v15.4"/>
+  </g>
+  <g id="i-harz" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+    <path d="M12 2.8c3.6 5 6 8 6 11.2a6 6 0 0 1-12 0c0-3.2 2.4-6.2 6-11.2z" fill="currentColor" fill-opacity=".3"/>
+    <path d="M9.4 14.6a2.6 2.6 0 0 0 1.6 3.2" stroke-width="1.3"/>
+  </g>
+  <!-- Bildnisse -->
+  <g id="p-zauberer">
+    <rect width="24" height="24" fill="#2A2038"/>
+    <circle cx="12" cy="20" r="7.6" fill="#3A2E52"/>
+    <path d="M12 3.4c2 2.6 3.6 5.4 4.4 7.6H7.6C8.4 8.8 10 6 12 3.4z" fill="#4A3C86"/>
+    <path d="M5.6 11h12.8v2.2H5.6z" fill="#5B4AA0"/>
+    <circle cx="12" cy="15.8" r="3.1" fill="#E6C8A0"/>
+    <path d="M9 19.4h6l1.8 4.6H7.2z" fill="#4A3C86"/>
+    <path d="M13.6 8.2a2.6 2.6 0 0 1 2 2.4" stroke="#FFD98A" stroke-width=".9" fill="none"/>
+  </g>
+  <g id="p-warg">
+    <rect width="24" height="24" fill="#241A14"/>
+    <path d="M4.6 9 6.4 3l4 3.4h7.2l4-3.4L19.4 9z" fill="#3A2A1E"/>
+    <path d="M4.8 9.4h14.4l-1.6 8.2L12 22l-5.6-4.4z" fill="#53402E"/>
+    <circle cx="9.4" cy="12.4" r="1.3" fill="#FF9A4A"/><circle cx="15" cy="12.4" r="1.3" fill="#FF9A4A"/>
+    <path d="M10.4 16.4h3.6l-1.8 2.2z" fill="#1A1008"/>
+    <path d="m9.6 18.6.8 2 1-1.6M14.8 18.6l-.8 2-1-1.6" fill="#EDE4D4"/>
+  </g>
+</defs></svg>
+
+<div id="buehne"></div>
+<div id="vignette"></div>
+
+<!-- ===================== Welt: Namen, Zahlen, Beute ====================== -->
+<div class="ebene" id="welt">
+  <!-- Boss -->
+  <div class="welt-el schild elite" data-nur="hud" style="left:1365px; top:178px; width:320px">
+    <div class="name">Grimmzahn, der Rudelführer</div>
+    <div class="balken f-feind"><i style="width:78%"></i><span>78 %</span></div>
+  </div>
+  <!-- eingefrorener Warg -->
+  <div class="welt-el schild" data-nur="hud" style="left:1120px; top:158px; width:112px">
+    <div class="zusatz">Eingefroren</div>
+    <div class="name">Warg · Stufe 6</div>
+    <div class="balken f-feind"><i style="width:55%"></i></div>
+  </div>
+  <div class="welt-el schaden" data-nur="hud" style="left:1205px; top:120px">138</div>
+  <!-- getroffener Warg -->
+  <div class="welt-el schild" data-nur="hud" style="left:1032px; top:402px; width:112px">
+    <div class="name">Warg · Stufe 6</div>
+    <div class="balken f-feind"><i style="width:28%"></i></div>
+  </div>
+  <div class="welt-el schaden krit" data-nur="hud" style="left:1036px; top:306px">412<small>KRITISCH</small></div>
+  <div class="welt-el schaden brand" data-nur="hud" style="left:1142px; top:392px">57</div>
+  <!-- dritter Warg -->
+  <div class="welt-el schild" data-nur="hud" style="left:1148px; top:606px; width:112px">
+    <div class="name">Warg · Stufe 5</div>
+    <div class="balken f-feind"><i style="width:100%"></i></div>
+  </div>
+  <!-- Beute -->
+  <div class="welt-el beute selten" data-nur="hud" style="left:1444px; top:688px">Glutdorn · Eichenstab</div>
+  <div class="welt-el beute magisch" data-nur="hud" style="left:1106px; top:926px">Glühender Birkenstab</div>
+  <div class="welt-el beute gold" data-nur="hud" style="left:1402px; top:856px">37 Gold</div>
+  <!-- Jäger im Lager -->
+  <div class="welt-el questzeichen" data-nur="hud inventar schriftrolle wegweiser" style="left:216px; top:498px">!</div>
+  <div class="welt-el schild freund" data-nur="hud inventar schriftrolle wegweiser" style="left:216px; top:548px; width:150px">
+    <div class="name">Jäger Rodrik</div>
+  </div>
+
+  <!-- Wegweiser-Szene: Objekt in der Welt plus Hinweis -->
+  <svg class="welt-el" data-nur="wegweiser" style="left:452px; top:656px; width:150px; height:230px" viewBox="0 0 150 230">
+    <ellipse cx="74" cy="214" rx="40" ry="11" fill="#000" opacity=".45"/>
+    <rect x="68" y="44" width="13" height="172" fill="#2A1C10"/>
+    <rect x="68" y="44" width="5" height="172" fill="#3E2A16"/>
+    <path d="M81 58h52l16 15-16 15H81z" fill="#3A2716" stroke="#17100A" stroke-width="2"/>
+    <path d="M68 96H20L4 111l16 15h48z" fill="#33220F" stroke="#17100A" stroke-width="2"/>
+    <path d="M81 134h44l16 15-16 15H81z" fill="#3A2716" stroke="#17100A" stroke-width="2"/>
+    <path d="M86 64h40M86 72h30" stroke="#6B553A" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M26 102h36M34 110h28" stroke="#6B553A" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M86 140h32M86 148h24" stroke="#6B553A" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M62 44h25l-12-14z" fill="#3E2A16" stroke="#17100A" stroke-width="2"/>
+  </svg>
+  <div class="welt-el weltknopf" data-nur="wegweiser" style="left:470px; top:558px"><kbd>E</kbd> Wegweiser lesen</div>
+</div>
+
+<!-- ===================== Dauerhafte Oberfläche =========================== -->
+<div class="ebene" id="hud">
+
+  <!-- Einheitenfenster oben links -->
+  <div id="einheiten">
+    <div class="einheit panel">
+      <div class="portraet">
+        <svg viewBox="0 0 24 24"><use href="#p-zauberer"/></svg>
+        <div class="stufe">7</div>
+      </div>
+      <div class="einheit-daten">
+        <div class="einheit-name">Alrik <span class="sippe">Zauberer</span></div>
+        <div class="balken f-leben"><i style="width:72%"></i><span>412 / 570</span></div>
+        <div class="balken f-mana"><i style="width:56%"></i><span>128 / 230</span></div>
+      </div>
+    </div>
+
+    <div class="einheit panel ziel" data-nur="hud inventar schriftrolle">
+      <div class="portraet">
+        <svg viewBox="0 0 24 24"><use href="#p-warg"/></svg>
+        <div class="stufe">9</div>
+      </div>
+      <div class="einheit-daten">
+        <div class="einheit-name">Grimmzahn <span class="elite-marke">Elite</span></div>
+        <div class="balken f-feind"><i style="width:78%"></i><span>2 184 / 2 800</span></div>
+        <div class="leise winzig" style="margin-top:3px">Rudelführer · Wolfslichtung</div>
+      </div>
+    </div>
+    <div class="zustaende" data-nur="hud inventar schriftrolle">
+      <div class="zustand"><svg viewBox="0 0 24 24" style="color:#FF8A4A"><use href="#i-raserei"/></svg><b>Rasend</b></div>
+      <div class="zustand"><svg viewBox="0 0 24 24" style="color:#FFD17A"><use href="#i-ruf"/></svg><b>Rudelruf</b></div>
+      <div class="zustand"><svg viewBox="0 0 24 24" style="color:#9BE8A8"><use href="#i-dornen"/></svg><b>Dornenfell</b></div>
+    </div>
+  </div>
+
+  <!-- Minikarte -->
+  <div id="minikarte">
+    <div class="zonenbalken">Das Wildholz</div>
+    <div class="karte">
+      <svg viewBox="0 0 212 192">
+        <defs>
+          <clipPath id="a-mm"><rect x="0" y="0" width="212" height="192"/></clipPath>
+          <radialGradient id="a-mmrand"><stop offset=".64" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".7"/></radialGradient>
+        </defs>
+        <g clip-path="url(#a-mm)">
+          <rect width="212" height="192" fill="#111B0E"/>
+          <ellipse cx="128" cy="84" rx="66" ry="46" fill="#2E4425" stroke="#44603A" stroke-width="2"/>
+          <path d="M-10 128 L70 122 L108 96 L150 92 L222 80" fill="none" stroke="#6E5B3E" stroke-width="9" stroke-linecap="round"/>
+          <path d="M104 200 L100 140 L108 96 L96 40 L104 -10" fill="none" stroke="#6E5B3E" stroke-width="9" stroke-linecap="round"/>
+          <circle cx="40" cy="146" r="6" fill="#FF9A3A"/>
+          <text x="40" y="132" font-family="Marcellus" font-size="17" fill="#FFD23A" text-anchor="middle">!</text>
+          <circle cx="24" cy="60" r="9" fill="#0B2A33" stroke="#5FE0FF" stroke-width="3"/>
+          <circle cx="24" cy="60" r="3.4" fill="#9FF4FF"/>
+          <circle cx="140" cy="62" r="4.6" fill="#D1452F" stroke="#000" stroke-width="1.2"/>
+          <circle cx="132" cy="92" r="4.6" fill="#D1452F" stroke="#000" stroke-width="1.2"/>
+          <circle cx="150" cy="112" r="4.6" fill="#D1452F" stroke="#000" stroke-width="1.2"/>
+          <path d="M172 48 l8 8 l-8 8 l-8 -8 z" fill="#FFA23C" stroke="#000" stroke-width="1.4"/>
+          <path d="M176 116 l6 6 l-6 6 l-6 -6 z" fill="#5FAEFF" stroke="#000" stroke-width="1.2"/>
+          <path d="M106 86 l7 16 l-7 -5 l-7 5 z" fill="#FFFFFF" stroke="#000" stroke-width="1.4"/>
+          <rect width="212" height="192" fill="url(#a-mmrand)"/>
+        </g>
+        <text x="106" y="16" font-family="Marcellus" font-size="13" fill="#E8DCC2" text-anchor="middle">N</text>
+      </svg>
+    </div>
+    <div class="fussleiste"><span>Wolfslichtung</span><span>Gebietsstufe 7</span></div>
+  </div>
+
+  <!-- Eigene Stärkungszauber -->
+  <div id="staerkungen">
+    <div class="staerkung">
+      <div class="feld sy-schutz"><svg viewBox="0 0 24 24" style="color:#9FE8FF"><use href="#i-schild"/></svg></div>
+      <b>8 s</b>
+    </div>
+    <div class="staerkung">
+      <div class="feld sy-feuer"><svg viewBox="0 0 24 24" style="color:#FFB04A"><use href="#i-glut"/></svg></div>
+      <b>Glut</b>
+    </div>
+    <div class="staerkung">
+      <div class="feld sy-wind"><svg viewBox="0 0 24 24" style="color:#B8E8A0"><use href="#i-rolle"/></svg></div>
+      <b>Hast</b>
+    </div>
+  </div>
+
+  <!-- Questverfolgung -->
+  <div id="quests" class="panel">
+    <div class="ueberschrift">Aufgaben</div>
+    <div class="quest">
+      <div class="q-name">Der Zauberstabmacher</div>
+      <div class="q-ort">Das Wildholz</div>
+      <div class="q-schritt erledigt">Wargzähne sammeln <b>2/3</b></div>
+      <div class="q-schritt">Grimmzahn erlegen <b>0/1</b></div>
+    </div>
+    <div class="quest">
+      <div class="q-name">Die unleserliche Schriftrolle</div>
+      <div class="q-ort">Hauptaufgabe</div>
+      <div class="q-schritt">Nimm den Umweg durch den Wald</div>
+    </div>
+  </div>
+
+  <!-- Kampfmitschrift -->
+  <div id="mitschrift">
+    <div class="reiter"><span class="aktiv">Allgemein</span><span>Kampf</span><span>Beute</span></div>
+    <p class="treffer" data-nur="hud inventar schriftrolle">Dein <b>Feuerball</b> trifft Warg kritisch für <b>412</b>.</p>
+    <p class="treffer" data-nur="hud inventar schriftrolle">Warg erleidet <b>57</b> Feuerschaden durch Brand.</p>
+    <p class="system" data-nur="hud inventar schriftrolle">Frostnova friert Warg für 4 s ein.</p>
+    <p class="erhalten" data-nur="hud inventar schriftrolle">Grimmzahn trifft dich mit Prankenhieb für 86.</p>
+    <p class="beutezeile" data-nur="hud inventar schriftrolle">Du erhältst Beute: <b>Glutdorn · Eichenstab</b>.</p>
+    <p class="system" data-nur="hud inventar schriftrolle">Aufgabe aktualisiert: Wargzähne sammeln 2/3.</p>
+    <p data-nur="wegweiser">Du rastest am Lagerfeuer. Speicherpunkt gesetzt.</p>
+    <p class="system" data-nur="wegweiser">Jäger Rodrik bietet dir eine Aufgabe an.</p>
+    <p class="beutezeile" data-nur="wegweiser">Du hebst auf: <b>Alte Schriftrolle</b>.</p>
+    <p class="system" data-nur="wegweiser">Neue Aufgabe: Die unleserliche Schriftrolle.</p>
+    <p data-nur="wegweiser">Du liest den Wegweiser am Wegekreuz.</p>
+    <p class="system" data-nur="wegweiser">Aufgabe aktualisiert: Nimm den Umweg durch den Wald.</p>
+  </div>
+
+  <!-- Aktionsleiste -->
+  <div id="aktionsleiste">
+    <div class="feld sy-feuer aktiv">
+      <svg viewBox="0 0 24 24" style="color:#FFC24A"><use href="#i-feuerball"/></svg>
+      <span class="taste">LMT</span>
+    </div>
+    <div class="feld sy-frost ab-kurz">
+      <svg viewBox="0 0 24 24" style="color:#BFF0FF"><use href="#i-frostnova"/></svg>
+      <div class="abkling">2</div>
+      <span class="taste">RMT</span>
+    </div>
+    <div class="feld sy-wind">
+      <svg viewBox="0 0 24 24" style="color:#D8F0B0"><use href="#i-rolle"/></svg>
+      <span class="taste">Leer</span>
+    </div>
+    <div class="feld sy-blitz">
+      <svg viewBox="0 0 24 24" style="color:#E2C8FF"><use href="#i-blitz"/></svg>
+      <span class="taste">Q</span>
+    </div>
+    <div class="feld sy-schutz">
+      <svg viewBox="0 0 24 24" style="color:#9FE8FF"><use href="#i-schild"/></svg>
+      <span class="taste">E</span>
+    </div>
+    <div class="feld sy-erde ab-lang">
+      <svg viewBox="0 0 24 24" style="color:#FFB46A"><use href="#i-meteor"/></svg>
+      <div class="abkling">23</div>
+      <span class="taste">R</span>
+    </div>
+    <div class="trenner"></div>
+    <div class="feld sy-leben">
+      <svg viewBox="0 0 24 24" style="color:#FF8A7A"><use href="#i-heiltrank"/></svg>
+      <span class="taste">1</span><span class="anzahl">3</span>
+    </div>
+    <div class="feld sy-mana">
+      <svg viewBox="0 0 24 24" style="color:#8AB8FF"><use href="#i-heiltrank"/></svg>
+      <span class="taste">2</span><span class="anzahl">2</span>
+    </div>
+  </div>
+
+  <!-- Taschen -->
+  <div id="taschen">
+    <div class="gold">1 247 Gold</div>
+    <div class="feld hauptbeutel"><svg viewBox="0 0 24 24" style="color:#C9A24A"><use href="#i-beutel"/></svg><span class="taste">B</span><span class="anzahl">14</span></div>
+    <div class="feld"><svg viewBox="0 0 24 24" style="color:#8A7050"><use href="#i-beutel"/></svg></div>
+    <div class="feld"><svg viewBox="0 0 24 24" style="color:#8A7050"><use href="#i-beutel"/></svg></div>
+  </div>
+
+  <!-- EP-Leiste -->
+  <div id="ep">
+    <div class="bett">
+      <i style="width:62%"></i>
+      <div class="blasen"></div>
+      <div class="wert">Stufe 7 · 8 432 / 13 600 Erfahrung · 62 %</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== Abdunkelung hinter Fenstern ===================== -->
+<div id="schleier" data-nur="inventar schriftrolle"></div>
+
+<!-- ===================== Inventar ======================================== -->
+<div id="inventar" class="panel" data-nur="inventar">
+  <div class="spalte-held">
+    <div class="fenster-kopf">
+      <span class="titel">Alrik · Stufe 7</span>
+      <span class="schliessen">✕</span>
+    </div>
+    <div class="inhalt">
+      <div class="ausruestung">
+        <div class="platz"><span>Kopf</span></div>
+        <div class="platz"><span>Umhang</span></div>
+        <div class="platz"><span>Amulett</span></div>
+        <div class="platz belegt">
+          <svg viewBox="0 0 24 24" style="color:var(--selt-ungewoehnlich)"><use href="#i-stab"/></svg>
+        </div>
+        <div class="platz"><span>Robe</span></div>
+        <div class="platz"><span>Ring</span></div>
+        <div class="platz"><span>Hände</span></div>
+        <div class="platz"><span>Gürtel</span></div>
+        <div class="platz"><span>Stiefel</span></div>
+      </div>
+      <div class="leise winzig" style="margin-top:8px">Getragen: <span style="color:var(--selt-ungewoehnlich)">Glühender Birkenstab</span></div>
+
+      <div class="werte">
+        <div class="kopf" style="margin-bottom:6px">Werte</div>
+        <div class="zeile"><span>Zauberkraft</span><b>14 – 23</b></div>
+        <div class="zeile"><span>Zaubertempo</span><b>1,28 / s</b></div>
+        <div class="zeile"><span>Reichweite</span><b>mittel</b></div>
+        <div class="zeile"><span>Kritische Trefferchance</span><b>7,0 %</b></div>
+        <div class="zeile"><span>Intelligenz</span><b>24</b></div>
+        <div class="zeile"><span>Leben</span><b>570</b></div>
+        <div class="zeile"><span>Mana</span><b>230</b></div>
+        <div class="zeile"><span>Feuerschaden</span><b class="plus">+9 %</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spalte-tasche">
+    <div class="fenster-kopf">
+      <span class="titel">Rucksack</span>
+      <span class="leise winzig">14 von 48 Plätzen belegt · 1 247 Gold</span>
+    </div>
+    <div class="inhalt">
+      <div class="taschenraster">
+        <div class="feld r-selten gewaehlt"><svg viewBox="0 0 24 24" style="color:var(--selt-selten)"><use href="#i-stab"/></svg></div>
+        <div class="feld r-magisch"><svg viewBox="0 0 24 24" style="color:var(--selt-ungewoehnlich)"><use href="#i-stab"/></svg></div>
+        <div class="feld r-legendaer"><svg viewBox="0 0 24 24" style="color:var(--selt-legendaer)"><use href="#i-stab"/></svg></div>
+        <div class="feld r-gewoehnlich"><svg viewBox="0 0 24 24" style="color:var(--selt-gewoehnlich)"><use href="#i-stab"/></svg></div>
+        <div class="feld r-episch"><svg viewBox="0 0 24 24" style="color:var(--selt-episch)"><use href="#i-stab"/></svg></div>
+        <div class="feld r-gewoehnlich"><svg viewBox="0 0 24 24" style="color:var(--selt-gewoehnlich)"><use href="#i-zahn"/></svg><span class="anzahl">2</span></div>
+        <div class="feld r-gewoehnlich"><svg viewBox="0 0 24 24" style="color:#FF8A7A"><use href="#i-heiltrank"/></svg><span class="anzahl">3</span></div>
+        <div class="feld r-gewoehnlich"><svg viewBox="0 0 24 24" style="color:#8AB8FF"><use href="#i-heiltrank"/></svg><span class="anzahl">2</span></div>
+
+        <div class="feld r-magisch"><svg viewBox="0 0 24 24" style="color:var(--selt-ungewoehnlich)"><use href="#i-stab"/></svg></div>
+        <div class="feld r-gewoehnlich"><svg viewBox="0 0 24 24" style="color:#B8A888"><use href="#i-stab"/></svg></div>
+        <div class="feld r-gewoehnlich"><svg viewBox="0 0 24 24" style="color:#B8A888"><use href="#i-pergamentfetzen"/></svg><span class="anzahl">4</span></div>
+        <div class="feld r-gewoehnlich"><svg viewBox="0 0 24 24" style="color:#C9A24A"><use href="#i-harz"/></svg><span class="anzahl">6</span></div>
+        <div class="feld r-gewoehnlich"><svg viewBox="0 0 24 24" style="color:#B8A888"><use href="#i-zahn"/></svg></div>
+        <div class="feld r-gewoehnlich"><svg viewBox="0 0 24 24" style="color:#B8A888"><use href="#i-stab"/></svg></div>
+        <div class="feld leer"></div><div class="feld leer"></div>
+        <div class="feld leer"></div><div class="feld leer"></div><div class="feld leer"></div><div class="feld leer"></div>
+        <div class="feld leer"></div><div class="feld leer"></div><div class="feld leer"></div><div class="feld leer"></div>
+        <div class="feld leer"></div><div class="feld leer"></div><div class="feld leer"></div><div class="feld leer"></div>
+        <div class="feld leer"></div><div class="feld leer"></div><div class="feld leer"></div><div class="feld leer"></div>
+        <div class="feld leer"></div><div class="feld leer"></div><div class="feld leer"></div><div class="feld leer"></div>
+        <div class="feld leer"></div><div class="feld leer"></div><div class="feld leer"></div><div class="feld leer"></div>
+      </div>
+
+      <div class="kopf" style="margin:16px 0 6px">Aufgabengegenstände</div>
+      <div class="taschenraster">
+        <div class="feld r-selten"><svg viewBox="0 0 24 24" style="color:var(--selt-selten)"><use href="#i-schriftrolle"/></svg></div>
+        <div class="feld r-gewoehnlich"><svg viewBox="0 0 24 24" style="color:#B8A888"><use href="#i-zahn"/></svg><span class="anzahl">2</span></div>
+        <div class="feld leer"></div>
+      </div>
+
+      <div class="seltenheitsschluessel">
+        <span><i style="color:#8A8070"></i>Gewöhnlich</span>
+        <span><i style="color:var(--selt-ungewoehnlich)"></i>Magisch</span>
+        <span><i style="color:var(--selt-selten)"></i>Selten</span>
+        <span><i style="color:var(--selt-episch)"></i>Episch</span>
+        <span><i style="color:var(--selt-legendaer)"></i>Legendär</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tooltip: getragener Stab (Vergleich) -->
+<div class="tooltip vergleich r-magisch" id="tt-vergleich" data-nur="inventar">
+  <div class="vergleich-marke">Getragen</div>
+  <div class="tt-kopf">
+    <div class="tt-name">Glühender Birkenstab</div>
+    <div class="tt-art">Zauberstab · Birke · Spinnenfeder · 10 Zoll</div>
+  </div>
+  <div class="tt-block">
+    <div class="tt-zeile"><span>Zauberkraft</span><b>14 – 23</b></div>
+    <div class="tt-zeile"><span>Zaubertempo</span><b>1,28 / s</b></div>
+    <div class="tt-zeile"><span>Reichweite</span><b>mittel</b></div>
+  </div>
+  <div class="tt-block implizit">+20 % Geschossgeschwindigkeit</div>
+  <div class="tt-block affix">
+    <div>+9 % Feuerschaden</div>
+    <div>+18 maximales Mana</div>
+  </div>
+  <div class="tt-block spruch">„Der ideale Zauberstab für jemanden mit Intelligenz und Beweglichkeit.“</div>
+  <div class="tt-block bedarf">Benötigt Stufe 4 · 16 Intelligenz</div>
+</div>
+
+<!-- Tooltip: neuer Stab -->
+<div class="tooltip r-selten" id="tt-neu" data-nur="inventar">
+  <div class="tt-kopf">
+    <div class="tt-name">Glutdorn · Eichenstab</div>
+    <div class="tt-art">Zauberstab · Eiche · Adlerfeder · 14 Zoll</div>
+  </div>
+  <div class="tt-block">
+    <div class="tt-zeile"><span>Zauberkraft</span><b>24 – 41 <span class="d auf">▲ +10 – 18</span></b></div>
+    <div class="tt-zeile"><span>Zaubertempo</span><b>1,10 / s <span class="d ab">▼ −0,18</span></b></div>
+    <div class="tt-zeile"><span>Reichweite</span><b>lang <span class="d auf">▲ besser</span></b></div>
+  </div>
+  <div class="tt-block implizit">+30 % Geschossgeschwindigkeit <span class="d auf">▲ +10 %</span></div>
+  <div class="tt-block affix">
+    <div>+18 % Feuerschaden <span class="d auf">▲ +9 %</span></div>
+    <div>+34 maximales Mana <span class="d auf">▲ +16</span></div>
+    <div>+12 % kritische Trefferchance für Zauber</div>
+    <div>Geschosse durchbohren 1 weiteren Gegner</div>
+  </div>
+  <div class="tt-block spruch">„Der geeignete Zauberstab für jemanden mit Stärke und Integrität.“</div>
+  <div class="tt-block bedarf">Benötigt Stufe 6 · 24 Intelligenz &nbsp;·&nbsp; Rechtsklick zum Ausrüsten</div>
+</div>
+
+<!-- Mauszeiger über dem gewählten Feld -->
+<svg id="zeiger" data-nur="inventar" width="30" height="36" viewBox="0 0 40 48">
+  <path d="M3 2 L34 22 L20 25 L27 41 L20 44 L13 28 L4 37 Z" fill="#F3E7D2" stroke="#120C06" stroke-width="3" stroke-linejoin="round"/>
+</svg>
+
+<!-- ===================== Schriftrolle ==================================== -->
+<div id="schriftrolle" class="panel" data-nur="schriftrolle">
+  <div class="fenster-kopf">
+    <span class="titel">Die unleserliche Schriftrolle</span>
+    <span class="schliessen">✕</span>
+  </div>
+  <div class="pergament">
+    <div class="runenzeile">ᛗᚨᚾᚾᚨᛉ ᚦᚢᚱᛁᛊᚨᛉ ᛁᚾᚷ<span class="glimmt">ᚹ</span>ᚨᛉ ᚹᚨᛚᚺᚨᛉ</div>
+    <div class="runenzeile">ᛖᚺᚹᚨᛉ ᚨᚾᛊᚢᛉ ᛒᛖᚱᚲᚨᚾᚨᚾ ᚺᚨᚷᚨᛚᚨᛉ</div>
+    <div class="runenzeile">ᚲᛖᚾᚨᛉ ᛊᛟᚹᛁᛚᛟ <span class="glimmt">ᛏ</span>ᛁᚹᚨᛉ ᛟᚦᚨᛚᚨᚾ</div>
+    <div class="runenzeile">ᛃᛖᚱᚨᚾ ᚷᛖᛒᛟ ᚹᚢᚾᛃᛟ ᛞᚨᚷᚨᛉ ᚱᚨᛁᛞᛟ</div>
+    <div class="runenzeile">ᚠᛖᚺᚢ ᚢᚱᚢᛉ ᚦᚢᚱᛁᛊᚨᛉ <span class="glimmt">ᚨ</span>ᚾᛊᚢᛉ</div>
+    <div class="runenzeile">ᛁᛜᚹᚨᛉ ᛈᛖᚱᚦᛟ ᛇᚹᚨᛉ ᛚᚨᚢᚲᚨᛉ</div>
+  </div>
+  <div class="hinweis">
+    <b>Die Zeichen ergeben keinen Sinn.</b> Nur drei von ihnen glimmen schwach, wenn du sie ansiehst –
+    als warteten sie darauf, dass jemand den Rest aufsagt. Finde jemanden, der die alte Schrift
+    entziffern kann. Vielleicht im Dorf.
+  </div>
+  <div class="fortschritt">
+    <span>Entziffert</span>
+    <div class="balken f-ep"><i style="width:7%"></i></div>
+    <span><b style="color:var(--text)">3</b> von 41 Zeichen</span>
+  </div>
+</div>
+
+<!-- ===================== Wegweiser ======================================= -->
+<div id="wegweiser" class="panel" data-nur="wegweiser">
+  <div class="fenster-kopf">
+    <span class="titel">Wegweiser am Wegekreuz</span>
+    <span class="leise winzig">E schließen</span>
+  </div>
+  <div class="arme">
+    <div class="arm gesperrt">
+      <div class="sinnbild"><svg viewBox="0 0 24 24"><use href="#i-dorf"/></svg></div>
+      <div class="text">
+        <div class="ziel">Erlengrund <span class="leise winzig">· Dorf</span></div>
+        <div class="grund">Die Brücke über die Schlucht ist eingestürzt. Ein Schild rät zum Umweg durch den Wald.</div>
+      </div>
+      <div class="marke">Gesperrt</div>
+    </div>
+    <div class="arm gesperrt">
+      <div class="sinnbild"><svg viewBox="0 0 24 24"><use href="#i-berg"/></svg></div>
+      <div class="text">
+        <div class="ziel">Grauzahn-Pass <span class="leise winzig">· Berge</span></div>
+        <div class="grund">Ein Erdrutsch versperrt den Pass. Geröll liegt mannshoch auf dem Weg.</div>
+      </div>
+      <div class="marke">Gesperrt</div>
+    </div>
+    <div class="arm offen">
+      <div class="sinnbild"><svg viewBox="0 0 24 24"><use href="#i-wald"/></svg></div>
+      <div class="text">
+        <div class="ziel">Wildholz <span class="leise winzig">· Wald</span></div>
+        <div class="grund">Der einzige Weg, der noch frei ist. Gebietsstufe 7 – halte die Zauber bereit.</div>
+      </div>
+      <div class="marke">Offen</div>
+    </div>
+  </div>
+</div>
+
+<div id="questmeldung" class="panel" data-nur="wegweiser">
+  <div class="marke">Aufgabe aktualisiert</div>
+  <div class="name">Die unleserliche Schriftrolle</div>
+  <div class="ziel">Nimm den Umweg durch den Wald.</div>
+</div>
+
+</body>
+</html>
