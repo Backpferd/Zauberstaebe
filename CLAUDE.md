@@ -30,13 +30,18 @@ Claude baut das Spiel komplett selbst. Der Nutzer testet, gibt Feedback und übe
 
 - Konzeptszene fertig. Rückmeldung des Nutzers: Die Grafik passt. Es gibt aber Schatten-Pixelfehler, und die UI gefällt ihm „absolut nicht“. Beides ist im Plan berücksichtigt (Aufgaben 1.4 und 0.5).
 - **`PLAN.md` ist freigegeben.** Alle Fragen aus Abschnitt 8 sind beantwortet (siehe Tabelle oben).
-- **Welle 0 läuft.** 0.2 (Architektur) und 0.4 (Agent-Definitionen) sind fertig, 0.1 (Setup) und 0.5 (UI-Stilfindung) sind in Arbeit. Danach folgt 0.3 (Engine-Kern).
-- Gearbeitet wird auf dem Branch `ccr-e90d73eb-2cnpu9`, der noch nicht in `main` übernommen ist.
+- **Welle 0 läuft.** Fertig: 0.1 (Setup, CI und Pages grün), 0.2 (Architektur), 0.4 (Agent-Definitionen). In Arbeit: 0.3 (Engine-Kern), 0.5 (UI-Stilfindung).
+- **Testlink:** https://backpferd.github.io/Zauberstaebe/ (wird bei jedem Push auf `main` neu veröffentlicht, über `.github/workflows/pages.yml`)
+- Gearbeitet wird auf dem Branch `ccr-e90d73eb-2cnpu9`. Geprüfte Stände werden per Fast-Forward nach `main` übernommen.
 
 ## Hinweise für neue Sitzungen
 
 - Neu angelegte Agent-Definitionen unter `.claude/agents/` greifen **erst ab der nächsten Sitzung**. In der Sitzung, in der sie entstehen, muss man `general-purpose` mit `model`-Override aufrufen; die Stufe lässt sich dann nicht setzen und wird über den Auftragstext ausgeglichen.
+- **Arbeitskopien der Agenten zweigen von `main` ab**, nicht vom aktuellen Branch. Vor jeder Welle muss `main` deshalb auf dem neuesten geprüften Stand sein, sonst fehlen dem Agenten Gerüst, Architektur und Vorarbeiten.
+- Die Arbeitskopien liegen unter `.claude/worktrees/`. Sie sind in `.gitignore` und `eslint.config.js` ausgenommen.
+- Kein `gh` auf dem Rechner. GitHub-API-Aufrufe laufen per `curl` mit dem Token aus `git credential fill`. Den Token nie ausgeben.
 - Dateien mit Umlauten **nicht** über PowerShell `Set-Content` oder ein Bash-Heredoc schreiben, sondern mit dem Write-/Edit-Werkzeug oder über Node.
+- Vor jedem Commit: `npm run lint`, `npm run format:check`, `npm run typecheck`, `npm test`, `npm run build`, `npm run test:e2e`.
 
 ## Konzeptszene neu rendern
 
