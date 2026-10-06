@@ -1,0 +1,2 @@
+# Einheitliche Zeilenenden (LF), passend zu Prettier (endOfLine: lf) und der CI unter Linux.
+* text=auto eol=lf

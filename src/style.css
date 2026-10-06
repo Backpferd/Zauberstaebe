@@ -1,0 +1,27 @@
+:root {
+  --hintergrund: #0e1a20;
+  --schrift-titel: 'Cinzel', serif;
+  --schrift-text: 'Alegreya', serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--hintergrund);
+  font-family: var(--schrift-text);
+}
+
+#spiel {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
