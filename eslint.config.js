@@ -11,6 +11,8 @@ export default tseslint.config(
       'test-results/**',
       'playwright-report/**',
       '.vite/**',
+      // Arbeitskopien der Agenten liegen unter .claude/worktrees/.
+      '.claude/**',
       // Die Konzeptszene ist eine fertige Referenz und wird nicht angefasst.
       'konzept/**',
     ],

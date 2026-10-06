@@ -23,20 +23,20 @@ Dieses Dokument legt fest, wie das Spiel aufgebaut ist, wer welchen Ordner besit
 
 Jeder Ordner hat **genau einen** zuständigen Agenten pro Welle. Fremde Ordner werden nicht angefasst — auch nicht „nur kurz".
 
-| Ordner | Inhalt | Darf importieren aus |
-| --- | --- | --- |
-| `src/engine/` | Spielschleife, Zeit, Ereignisbus, Entitäten, Eingabe, Kamera, Renderer, Licht und Schatten, Audio-Grundlage, Seed-Zufall, Texttabelle, Debug (F3/F8) | – (nur Three.js und eigene Dateien) |
-| `src/content/` | Alle Daten und Texte: Zauberstäbe, Affixe, Seltenheiten, Zauber, Gegner, Quest, Begegnungen, Stufenkurven | – (reine Daten, keine Logik) |
-| `src/models/` | Prozedurale 3D-Modelle und ihre Animationen: Zauberer, Wolf, Warg, Irrlicht, Grimmzahn, Requisiten | `engine` |
-| `src/fx/` | Partikel, Zauber- und Treffereffekte, Warnmarkierungen am Boden, Bildschirmwackeln | `engine` |
-| `src/world/` | Gelände, Wege, Vegetation, Kollision, Wegfindung, Aufbau von Gebiet 1, Begegnungszonen | `engine`, `content`, `models` |
-| `src/game/` | Spiellogik: Spieler, Kampf, Zauber, Gegner-KI, Boss, Beute, Inventar, Quests, Fortschritt, Spielstand | `engine`, `content`, `world` |
-| `src/ui/` | HUD, Fenster, Menüs als HTML/CSS über der 3D-Ebene | `engine`, `content` |
-| `tests/unit/` | Logiktests (Vitest) | alles |
-| `tests/e2e/` | Browsertests und Testbot (Playwright) | – |
-| `docs/` | Architektur und Spieldesign | – |
-| `konzept/` | **Eingefroren.** Die Konzeptszene bleibt als Referenz, wird nicht mehr geändert. | – |
-| `ui-stile/` | **Eingefroren** nach Aufgabe 0.5. Die drei Stilentwürfe bleiben als Referenz. | – |
+| Ordner         | Inhalt                                                                                                                                               | Darf importieren aus                |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| `src/engine/`  | Spielschleife, Zeit, Ereignisbus, Entitäten, Eingabe, Kamera, Renderer, Licht und Schatten, Audio-Grundlage, Seed-Zufall, Texttabelle, Debug (F3/F8) | – (nur Three.js und eigene Dateien) |
+| `src/content/` | Alle Daten und Texte: Zauberstäbe, Affixe, Seltenheiten, Zauber, Gegner, Quest, Begegnungen, Stufenkurven                                            | – (reine Daten, keine Logik)        |
+| `src/models/`  | Prozedurale 3D-Modelle und ihre Animationen: Zauberer, Wolf, Warg, Irrlicht, Grimmzahn, Requisiten                                                   | `engine`                            |
+| `src/fx/`      | Partikel, Zauber- und Treffereffekte, Warnmarkierungen am Boden, Bildschirmwackeln                                                                   | `engine`                            |
+| `src/world/`   | Gelände, Wege, Vegetation, Kollision, Wegfindung, Aufbau von Gebiet 1, Begegnungszonen                                                               | `engine`, `content`, `models`       |
+| `src/game/`    | Spiellogik: Spieler, Kampf, Zauber, Gegner-KI, Boss, Beute, Inventar, Quests, Fortschritt, Spielstand                                                | `engine`, `content`, `world`        |
+| `src/ui/`      | HUD, Fenster, Menüs als HTML/CSS über der 3D-Ebene                                                                                                   | `engine`, `content`                 |
+| `tests/unit/`  | Logiktests (Vitest)                                                                                                                                  | alles                               |
+| `tests/e2e/`   | Browsertests und Testbot (Playwright)                                                                                                                | –                                   |
+| `docs/`        | Architektur und Spieldesign                                                                                                                          | –                                   |
+| `konzept/`     | **Eingefroren.** Die Konzeptszene bleibt als Referenz, wird nicht mehr geändert.                                                                     | –                                   |
+| `ui-stile/`    | **Eingefroren** nach Aufgabe 0.5. Die drei Stilentwürfe bleiben als Referenz.                                                                        | –                                   |
 
 **Abhängigkeitsrichtung** (nur von links nach rechts):
 
@@ -60,13 +60,13 @@ Die einzige Verbindung zwischen Systemen. Typisiert, synchron, ohne Zwischenspei
 ```ts
 // src/engine/ereignisse.ts
 export interface Ereignisse {
-  'spieler:bewegt': { position: Vec3; geschwindigkeit: number }
+  'spieler:bewegt': { position: Vec3; geschwindigkeit: number };
   // … siehe vollständige Liste unten
 }
 
 export interface Bus {
-  aus<K extends keyof Ereignisse>(e: K, nutzlast: Ereignisse[K]): void
-  an<K extends keyof Ereignisse>(e: K, hoerer: (n: Ereignisse[K]) => void): () => void
+  aus<K extends keyof Ereignisse>(e: K, nutzlast: Ereignisse[K]): void;
+  an<K extends keyof Ereignisse>(e: K, hoerer: (n: Ereignisse[K]) => void): () => void;
 }
 ```
 
@@ -81,101 +81,101 @@ Diese Namen sind verbindlich. Wer ein neues Ereignis braucht, trägt es hier nac
 
 **Spieler**
 
-| Ereignis | Nutzlast |
-| --- | --- |
-| `spieler:bewegt` | `{ position, geschwindigkeit }` |
-| `spieler:schaden` | `{ menge, quelle, element, kritisch }` |
-| `spieler:geheilt` | `{ menge, quelle }` |
-| `spieler:leben-geaendert` | `{ aktuell, maximum }` |
-| `spieler:mana-geaendert` | `{ aktuell, maximum }` |
-| `spieler:gestorben` | `{ quelle }` |
-| `spieler:wiederbelebt` | `{ position }` |
-| `spieler:ep-erhalten` | `{ menge, gesamt }` |
-| `spieler:stufe-aufgestiegen` | `{ stufe, neueWerte }` |
-| `spieler:ausgewichen` | `{ richtung }` |
+| Ereignis                     | Nutzlast                               |
+| ---------------------------- | -------------------------------------- |
+| `spieler:bewegt`             | `{ position, geschwindigkeit }`        |
+| `spieler:schaden`            | `{ menge, quelle, element, kritisch }` |
+| `spieler:geheilt`            | `{ menge, quelle }`                    |
+| `spieler:leben-geaendert`    | `{ aktuell, maximum }`                 |
+| `spieler:mana-geaendert`     | `{ aktuell, maximum }`                 |
+| `spieler:gestorben`          | `{ quelle }`                           |
+| `spieler:wiederbelebt`       | `{ position }`                         |
+| `spieler:ep-erhalten`        | `{ menge, gesamt }`                    |
+| `spieler:stufe-aufgestiegen` | `{ stufe, neueWerte }`                 |
+| `spieler:ausgewichen`        | `{ richtung }`                         |
 
 **Kampf und Zauber**
 
-| Ereignis | Nutzlast |
-| --- | --- |
-| `zauber:gewirkt` | `{ zauberId, wirker, ziel, position }` |
-| `zauber:fehlgeschlagen` | `{ zauberId, grund }` — Grund: `mana`, `abklingzeit` oder `reichweite` |
-| `zauber:abklingzeit-gestartet` | `{ zauberId, dauer }` |
-| `zauber:abklingzeit-beendet` | `{ zauberId }` |
-| `geschoss:erzeugt` | `{ geschossId, zauberId, position, richtung }` |
-| `geschoss:getroffen` | `{ geschossId, zielId, position }` |
-| `geschoss:verfallen` | `{ geschossId }` |
-| `treffer:gelandet` | `{ angreifer, ziel, menge, element, kritisch, position }` |
-| `effekt:angewandt` | `{ zielId, effekt, dauer }` — Effekt: `brennen`, `einfrieren` oder `raserei` |
-| `effekt:abgelaufen` | `{ zielId, effekt }` |
+| Ereignis                       | Nutzlast                                                                     |
+| ------------------------------ | ---------------------------------------------------------------------------- |
+| `zauber:gewirkt`               | `{ zauberId, wirker, ziel, position }`                                       |
+| `zauber:fehlgeschlagen`        | `{ zauberId, grund }` — Grund: `mana`, `abklingzeit` oder `reichweite`       |
+| `zauber:abklingzeit-gestartet` | `{ zauberId, dauer }`                                                        |
+| `zauber:abklingzeit-beendet`   | `{ zauberId }`                                                               |
+| `geschoss:erzeugt`             | `{ geschossId, zauberId, position, richtung }`                               |
+| `geschoss:getroffen`           | `{ geschossId, zielId, position }`                                           |
+| `geschoss:verfallen`           | `{ geschossId }`                                                             |
+| `treffer:gelandet`             | `{ angreifer, ziel, menge, element, kritisch, position }`                    |
+| `effekt:angewandt`             | `{ zielId, effekt, dauer }` — Effekt: `brennen`, `einfrieren` oder `raserei` |
+| `effekt:abgelaufen`            | `{ zielId, effekt }`                                                         |
 
 **Gegner und Begegnungen**
 
-| Ereignis | Nutzlast |
-| --- | --- |
-| `gegner:erschienen` | `{ gegnerId, art, position }` |
-| `gegner:schaden` | `{ gegnerId, menge, leben, maximum }` |
-| `gegner:besiegt` | `{ gegnerId, art, position, ep }` |
-| `gegner:zustand-gewechselt` | `{ gegnerId, von, nach }` |
-| `begegnung:gestartet` | `{ begegnungId }` |
-| `begegnung:beendet` | `{ begegnungId, dauer }` |
-| `begegnung:zurueckgesetzt` | `{ begegnungId }` |
-| `boss:phase-gewechselt` | `{ phase, lebenAnteil }` |
-| `boss:angriff-angekuendigt` | `{ angriff, dauer, form }` |
-| `boss:angriff-ausgefuehrt` | `{ angriff }` |
+| Ereignis                    | Nutzlast                              |
+| --------------------------- | ------------------------------------- |
+| `gegner:erschienen`         | `{ gegnerId, art, position }`         |
+| `gegner:schaden`            | `{ gegnerId, menge, leben, maximum }` |
+| `gegner:besiegt`            | `{ gegnerId, art, position, ep }`     |
+| `gegner:zustand-gewechselt` | `{ gegnerId, von, nach }`             |
+| `begegnung:gestartet`       | `{ begegnungId }`                     |
+| `begegnung:beendet`         | `{ begegnungId, dauer }`              |
+| `begegnung:zurueckgesetzt`  | `{ begegnungId }`                     |
+| `boss:phase-gewechselt`     | `{ phase, lebenAnteil }`              |
+| `boss:angriff-angekuendigt` | `{ angriff, dauer, form }`            |
+| `boss:angriff-ausgefuehrt`  | `{ angriff }`                         |
 
 **Beute und Gegenstände**
 
-| Ereignis | Nutzlast |
-| --- | --- |
-| `beute:gefallen` | `{ beuteId, gegenstand, position }` |
-| `beute:aufgehoben` | `{ beuteId, gegenstand }` |
-| `gegenstand:ausgeruestet` | `{ gegenstand, platz, vorher }` |
-| `gegenstand:abgelegt` | `{ gegenstand, platz }` |
-| `trank:benutzt` | `{ art, menge }` |
-| `gold:erhalten` | `{ menge, gesamt }` |
+| Ereignis                  | Nutzlast                            |
+| ------------------------- | ----------------------------------- |
+| `beute:gefallen`          | `{ beuteId, gegenstand, position }` |
+| `beute:aufgehoben`        | `{ beuteId, gegenstand }`           |
+| `gegenstand:ausgeruestet` | `{ gegenstand, platz, vorher }`     |
+| `gegenstand:abgelegt`     | `{ gegenstand, platz }`             |
+| `trank:benutzt`           | `{ art, menge }`                    |
+| `gold:erhalten`           | `{ menge, gesamt }`                 |
 
 **Quest und Interaktion**
 
-| Ereignis | Nutzlast |
-| --- | --- |
-| `quest:gestartet` | `{ questId, titel }` |
-| `quest:schritt-erfuellt` | `{ questId, schrittId }` |
-| `quest:aktualisiert` | `{ questId, text }` |
-| `quest:abgeschlossen` | `{ questId }` |
+| Ereignis                 | Nutzlast                       |
+| ------------------------ | ------------------------------ |
+| `quest:gestartet`        | `{ questId, titel }`           |
+| `quest:schritt-erfuellt` | `{ questId, schrittId }`       |
+| `quest:aktualisiert`     | `{ questId, text }`            |
+| `quest:abgeschlossen`    | `{ questId }`                  |
 | `interaktion:verfuegbar` | `{ objektId, hinweis, taste }` |
-| `interaktion:entfallen` | `{ objektId }` |
-| `interaktion:ausgeloest` | `{ objektId }` |
-| `rast:begonnen` | `{ position }` |
+| `interaktion:entfallen`  | `{ objektId }`                 |
+| `interaktion:ausgeloest` | `{ objektId }`                 |
+| `rast:begonnen`          | `{ position }`                 |
 
 **Spielablauf**
 
-| Ereignis | Nutzlast |
-| --- | --- |
-| `spiel:gestartet` | `{ seed }` |
-| `spiel:pausiert` / `spiel:fortgesetzt` | `{}` |
-| `spiel:gespeichert` / `spiel:geladen` | `{ zeitpunkt }` |
-| `spiel:beendet` | `{ grund }` — `sieg` oder `abbruch` |
-| `grafikstufe:geaendert` | `{ stufe }` — `niedrig`, `mittel` oder `hoch` |
+| Ereignis                               | Nutzlast                                      |
+| -------------------------------------- | --------------------------------------------- |
+| `spiel:gestartet`                      | `{ seed }`                                    |
+| `spiel:pausiert` / `spiel:fortgesetzt` | `{}`                                          |
+| `spiel:gespeichert` / `spiel:geladen`  | `{ zeitpunkt }`                               |
+| `spiel:beendet`                        | `{ grund }` — `sieg` oder `abbruch`           |
+| `grafikstufe:geaendert`                | `{ stufe }` — `niedrig`, `mittel` oder `hoch` |
 
 **Darstellung und Ton** (nur `fx`, `ui` und die Audio-Grundlage hören zu)
 
-| Ereignis | Nutzlast |
-| --- | --- |
-| `fx:abspielen` | `{ name, position, dauer }` |
-| `audio:abspielen` | `{ name, position, lautstaerke }` |
-| `kamera:wackeln` | `{ staerke, dauer }` |
-| `ui:fenster-geoeffnet` / `ui:fenster-geschlossen` | `{ fenster }` |
-| `ui:hinweis` | `{ text, dauer }` |
+| Ereignis                                          | Nutzlast                          |
+| ------------------------------------------------- | --------------------------------- |
+| `fx:abspielen`                                    | `{ name, position, dauer }`       |
+| `audio:abspielen`                                 | `{ name, position, lautstaerke }` |
+| `kamera:wackeln`                                  | `{ staerke, dauer }`              |
+| `ui:fenster-geoeffnet` / `ui:fenster-geschlossen` | `{ fenster }`                     |
+| `ui:hinweis`                                      | `{ text, dauer }`                 |
 
 **Absichten der Oberfläche** (der einzige Weg von `ui` zurück in die Spiellogik)
 
-| Ereignis | Nutzlast |
-| --- | --- |
-| `absicht:gegenstand-ausruesten` | `{ gegenstandId }` |
-| `absicht:gegenstand-ablegen` | `{ platz }` |
-| `absicht:trank-benutzen` | `{ art }` |
-| `absicht:spiel-pausieren` | `{}` |
+| Ereignis                        | Nutzlast               |
+| ------------------------------- | ---------------------- |
+| `absicht:gegenstand-ausruesten` | `{ gegenstandId }`     |
+| `absicht:gegenstand-ablegen`    | `{ platz }`            |
+| `absicht:trank-benutzen`        | `{ art }`              |
+| `absicht:spiel-pausieren`       | `{}`                   |
 | `absicht:einstellung-geaendert` | `{ schluessel, wert }` |
 
 ---
@@ -187,61 +187,61 @@ Alle in `src/engine/` definiert, von dort importieren.
 ```ts
 // Weltzustand — die eine Quelle der Wahrheit
 export interface Welt {
-  readonly zeit: number          // Sekunden seit Spielstart (Simulationszeit)
-  readonly schritt: number       // Nummer des Simulationsschritts
-  readonly bus: Bus
-  readonly zufall: Zufall        // Generator mit Startwert
-  readonly entitaeten: Entitaeten
+  readonly zeit: number; // Sekunden seit Spielstart (Simulationszeit)
+  readonly schritt: number; // Nummer des Simulationsschritts
+  readonly bus: Bus;
+  readonly zufall: Zufall; // Generator mit Startwert
+  readonly entitaeten: Entitaeten;
 
-  finde(id: EntitaetId): Entitaet | undefined
-  inUmkreis(position: Vec3, radius: number, marke?: Marke): Entitaet[]
+  finde(id: EntitaetId): Entitaet | undefined;
+  inUmkreis(position: Vec3, radius: number, marke?: Marke): Entitaet[];
 }
 
 // System — jeder Baustein, der pro Schritt rechnet
 export interface System {
-  readonly name: string
-  readonly reihenfolge: number                  // kleiner = früher, siehe Tabelle unten
-  starten?(welt: Welt): void
-  schritt(welt: Welt, dt: number): void         // dt ist IMMER 1/60
-  rendern?(welt: Welt, anteil: number): void    // anteil zwischen 0 und 1, zum Interpolieren
-  beenden?(welt: Welt): void
+  readonly name: string;
+  readonly reihenfolge: number; // kleiner = früher, siehe Tabelle unten
+  starten?(welt: Welt): void;
+  schritt(welt: Welt, dt: number): void; // dt ist IMMER 1/60
+  rendern?(welt: Welt, anteil: number): void; // anteil zwischen 0 und 1, zum Interpolieren
+  beenden?(welt: Welt): void;
 }
 
 // Entität — alles, was in der Welt existiert
 export interface Entitaet {
-  readonly id: EntitaetId
-  readonly marken: Set<Marke>    // spieler, gegner, geschoss, beute, interaktiv, …
-  position: Vec3
-  blickrichtung: number          // Bogenmaß
-  readonly komponenten: Map<string, unknown>
+  readonly id: EntitaetId;
+  readonly marken: Set<Marke>; // spieler, gegner, geschoss, beute, interaktiv, …
+  position: Vec3;
+  blickrichtung: number; // Bogenmaß
+  readonly komponenten: Map<string, unknown>;
 }
 
 // Zufall — reproduzierbar
 export interface Zufall {
-  zahl(): number                 // zwischen 0 und 1
-  bereich(min: number, max: number): number
-  ganzzahl(min: number, max: number): number
-  waehle<T>(aus: readonly T[]): T
-  abzweig(name: string): Zufall  // eigener Strom, z. B. für Beute
+  zahl(): number; // zwischen 0 und 1
+  bereich(min: number, max: number): number;
+  ganzzahl(min: number, max: number): number;
+  waehle<T>(aus: readonly T[]): T;
+  abzweig(name: string): Zufall; // eigener Strom, z. B. für Beute
 }
 ```
 
 ### Reihenfolge der Systeme pro Schritt
 
-| # | System | Ordner |
-| --- | --- | --- |
-| 10 | Eingabe einlesen | `engine` |
-| 20 | Spielerbewegung, Kollision | `game` |
-| 30 | Zauber wirken, Abklingzeiten | `game` |
-| 40 | Geschosse bewegen und auswerten | `game` |
-| 50 | Gegner-KI und Wegfindung | `game` |
-| 60 | Boss-Phasen und Angriffe | `game` |
-| 70 | Schaden, Zustandseffekte, Tod | `game` |
-| 80 | Beute, Quest, Fortschritt | `game` |
-| 90 | Begegnungszonen prüfen | `world` |
-| 100 | Kamera nachführen | `engine` |
-| 110 | Partikel und Effekte | `fx` |
-| 120 | Oberfläche aktualisieren | `ui` |
+| #   | System                          | Ordner   |
+| --- | ------------------------------- | -------- |
+| 10  | Eingabe einlesen                | `engine` |
+| 20  | Spielerbewegung, Kollision      | `game`   |
+| 30  | Zauber wirken, Abklingzeiten    | `game`   |
+| 40  | Geschosse bewegen und auswerten | `game`   |
+| 50  | Gegner-KI und Wegfindung        | `game`   |
+| 60  | Boss-Phasen und Angriffe        | `game`   |
+| 70  | Schaden, Zustandseffekte, Tod   | `game`   |
+| 80  | Beute, Quest, Fortschritt       | `game`   |
+| 90  | Begegnungszonen prüfen          | `world`  |
+| 100 | Kamera nachführen               | `engine` |
+| 110 | Partikel und Effekte            | `fx`     |
+| 120 | Oberfläche aktualisieren        | `ui`     |
 
 ---
 
@@ -252,25 +252,38 @@ Alles unter `src/content/`, als TypeScript mit `as const satisfies …`, damit T
 ```ts
 // Zauberstab: Holz bestimmt die Grundwerte, Kern den Spezialeffekt,
 // die Länge Tempo und Reichweite
-export interface Holz   { id: string; name: string; zauberkraft: [number, number]; mana: number }
-export interface Kern   { id: string; name: string; effekt: Affix }
-export interface Laenge { zoll: number; tempo: number; reichweite: 'kurz' | 'mittel' | 'lang' }
+export interface Holz {
+  id: string;
+  name: string;
+  zauberkraft: [number, number];
+  mana: number;
+}
+export interface Kern {
+  id: string;
+  name: string;
+  effekt: Affix;
+}
+export interface Laenge {
+  zoll: number;
+  tempo: number;
+  reichweite: 'kurz' | 'mittel' | 'lang';
+}
 
 export interface Zauberstab {
-  id: string
-  holz: HolzId
-  kern: KernId
-  laenge: number          // Zoll, z. B. 11.5
-  seltenheit: Seltenheit  // gewoehnlich, magisch, selten, einzigartig
-  affixe: Affix[]
-  beschreibung: string    // der Satz aus der Datei `Zauberstabliste`
-  stufe: number           // benötigte Stufe
+  id: string;
+  holz: HolzId;
+  kern: KernId;
+  laenge: number; // Zoll, z. B. 11.5
+  seltenheit: Seltenheit; // gewoehnlich, magisch, selten, einzigartig
+  affixe: Affix[];
+  beschreibung: string; // der Satz aus der Datei `Zauberstabliste`
+  stufe: number; // benötigte Stufe
 }
 
 export interface Affix {
-  id: string
-  text: string            // „+18 % Feuerschaden"
-  wirkung: { art: WirkungsArt; wert: number }
+  id: string;
+  text: string; // „+18 % Feuerschaden"
+  wirkung: { art: WirkungsArt; wert: number };
 }
 ```
 
@@ -306,10 +319,10 @@ export interface Affix {
 
 ## 8. Debug-Werkzeuge
 
-| Taste | Wirkung |
-| --- | --- |
-| `F3` | Bildrate, Draw-Calls, Dreiecke, Entitätenzahl, Simulationsschritt |
-| `F4` | Grafikstufe durchschalten (niedrig / mittel / hoch) |
-| `F8` | Fehlerbericht in die Zwischenablage: Seed, Schritt, Position, die letzten 50 Ereignisse, Konsolenfehler, Browser und Grafikkarte |
+| Taste | Wirkung                                                                                                                          |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `F3`  | Bildrate, Draw-Calls, Dreiecke, Entitätenzahl, Simulationsschritt                                                                |
+| `F4`  | Grafikstufe durchschalten (niedrig / mittel / hoch)                                                                              |
+| `F8`  | Fehlerbericht in die Zwischenablage: Seed, Schritt, Position, die letzten 50 Ereignisse, Konsolenfehler, Browser und Grafikkarte |
 
 Der Startwert des Zufallsgenerators steht beim Spielstart in der Konsole und lässt sich über `?seed=…` in der Adresszeile vorgeben.
