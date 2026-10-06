@@ -15,6 +15,7 @@ export default tseslint.config(
       '.claude/**',
       // Die Konzeptszene ist eine fertige Referenz und wird nicht angefasst.
       'konzept/**',
+      'ui-stile/**',
     ],
   },
   js.configs.recommended,
