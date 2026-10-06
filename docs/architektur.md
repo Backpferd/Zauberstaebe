@@ -326,3 +326,187 @@ export interface Affix {
 | `F8`  | Fehlerbericht in die Zwischenablage: Seed, Schritt, Position, die letzten 50 Ereignisse, Konsolenfehler, Browser und Grafikkarte |
 
 Der Startwert des Zufallsgenerators steht beim Spielstart in der Konsole und lässt sich über `?seed=…` in der Adresszeile vorgeben.
+
+---
+
+## 9. Engine-Kern: so benutzt du ihn
+
+> Stand: 06.10.2026 · Aufgabe 0.3
+
+Alles kommt aus **einer** Datei. Was dort nicht exportiert wird, ist intern.
+
+```ts
+import { komponente, t, type System, type Welt } from '@engine/index';
+```
+
+| Datei            | Inhalt                                                                     |
+| ---------------- | -------------------------------------------------------------------------- |
+| `ereignisse.ts`  | Alle Ereignisse mit Nutzlasten (Konfliktzone: nur ergänzen)                |
+| `bus.ts`         | Ereignisbus mit Tiefenbegrenzung und Verlauf der letzten 50 Ereignisse     |
+| `zufall.ts`      | Seed-Zufall, `seedAusAdresse`                                              |
+| `welt.ts`        | `Welt`, `System`, `SCHRITT = 1/60`                                         |
+| `entitaeten.ts`  | Entitäten, Marken (Konfliktzone), Komponenten, Interpolation               |
+| `schleife.ts`    | `Simulation` (Schritte), `Spielschleife` (Bildwiederholung), `ManuelleUhr` |
+| `eingabe.ts`     | Aktionen, Belegung, eingefrorener Zustand (System 10)                      |
+| `kamera.ts`      | Kamera der Konzeptszene, folgt weich (System 100), Wackeln, Mausstrahl     |
+| `renderer.ts`    | WebGL, Nebel, Licht, AO, Bloom, Grafikstufen                               |
+| `schatten.ts`    | Mondlicht mit Schatten, folgt dem Fokus (Feinabstimmung: Aufgabe 1.4)      |
+| `grafikstufe.ts` | Stufen `niedrig`/`mittel`/`hoch` und was sie einstellen                    |
+| `texte.ts`       | `t()` und `registriereTexte()`                                             |
+| `audio.ts`       | AudioContext, Kanäle `gesamt`/`effekte`/`umgebung`, Klangerzeuger          |
+| `debug.ts`       | F3, F8, Fehlersammler, `window.__zauberstaebe`                             |
+| `engine.ts`      | `erzeugeEngine()`: baut alles zusammen; `main.ts` hängt die Systeme daran  |
+
+### 9.1 Ein System anlegen
+
+Systeme sind schlichte Objekte. Was sie von außen brauchen (Eingabe, Szene), bekommen sie über eine Fabrikfunktion, nie über Importe anderer Systeme. Eingehängt werden sie in `main.ts` mit `engine.systemHinzufuegen(…)`.
+
+```ts
+import { type Eingabe, type System } from '@engine/index';
+
+export function erzeugeSpielerSystem(eingabe: Eingabe): System {
+  return {
+    name: 'spieler',
+    reihenfolge: 20, // Tabelle in Abschnitt 4
+    starten(welt) {
+      /* einmalig: Entitäten anlegen, Zuhörer anmelden */
+    },
+    schritt(welt, dt) {
+      // dt ist immer 1/60. Zeit nur über welt.zeit, Zufall nur über welt.zufall.
+      const { bewegung } = eingabe.zustand;
+      // …
+    },
+    beenden(welt) {
+      /* Zuhörer abmelden */
+    },
+  };
+}
+```
+
+- `schritt` ändert den Zustand, `rendern(welt, anteil)` zeichnet ihn nur. Reine Darstellungssysteme (Modelle, Effekte) haben ein leeres `schritt() {}`.
+- Wirft ein System, meldet die Engine den Fehler einmal in der Konsole und läuft weiter.
+- Zufall für einen eigenen Bereich: `welt.zufall.abzweig('beute')`. Der Strom hängt nur vom Seed und vom Namen ab, nicht davon, wie viel andere Systeme ziehen.
+
+### 9.2 Eine Entität mit Komponente erzeugen
+
+```ts
+import { brauchtKomponente, komponente, mit, vec3 } from '@engine/index';
+
+// Einmal pro Komponente, als Konstante im eigenen Ordner. Der Name muss eindeutig sein.
+export const LEBEN = komponente<{ aktuell: number; maximum: number }>('leben');
+
+const wolf = welt.entitaeten.anlegen({
+  marken: ['gegner'],
+  position: vec3(4, 0, -2), // wird kopiert
+  blickrichtung: Math.PI,
+  komponenten: [mit(LEBEN, { aktuell: 30, maximum: 30 })],
+});
+
+for (const gegner of welt.entitaeten.mitMarke('gegner')) {
+  const leben = brauchtKomponente(gegner, LEBEN); // wirft, wenn sie fehlt
+  if (leben.aktuell <= 0) welt.entitaeten.entfernen(gegner);
+}
+const nah = welt.inUmkreis(spieler.position, 6, 'gegner'); // XZ-Ebene, Rand eingeschlossen
+```
+
+- **Entfernen wirkt am Schrittende.** Bis dahin fehlt die Entität schon in `alle`, `mitMarke` und `inUmkreis`, `finde(id)` liefert sie aber noch (mit `entfernt === true`).
+- IDs sind fortlaufende Zahlen ab 1 und werden nie wiederverwendet.
+- `holeKomponente` liefert `undefined`, wenn die Komponente fehlt; `setzeKomponente`, `hatKomponente` und `entferneKomponente` ergänzen das.
+- **Blickrichtung**: Bogenmaß wie `rotation.y` in Three.js. 0 schaut nach +z (zur Kamera), π/2 nach +x. Helfer: `winkelZu(von, nach)`, `richtungAusWinkel(winkel)`.
+- Neue Marken werden wie Ereignisse nur ergänzt (`Marke` in `entitaeten.ts`) und im Bericht genannt.
+
+### 9.3 Ein Ereignis senden und empfangen
+
+```ts
+// Senden: beschreibt, was passiert ist.
+welt.bus.aus('gegner:besiegt', { gegnerId: wolf.id, art: 'wolf', position: wolf.position, ep: 12 });
+
+// Empfangen: im starten() anmelden, im beenden() abmelden.
+let abmelden = (): void => {};
+const system: System = {
+  name: 'beute',
+  reihenfolge: 80,
+  starten(welt) {
+    abmelden = welt.bus.an('gegner:besiegt', ({ position, art }) => {
+      /* Beute würfeln … */
+    });
+  },
+  schritt() {},
+  beenden() {
+    abmelden();
+  },
+};
+```
+
+- Zustellung ist synchron. Positionen in Nutzlasten sind Momentaufnahmen: Wer sie aufbewahrt, kopiert sie mit `kopiereVec3`.
+- Anzeigetexte in Nutzlasten (`titel`, `text`, `hinweis`) sind schon übersetzt, also Ergebnisse von `t()`.
+- `absicht:*`-Ereignisse kommen aus der Oberfläche, also außerhalb eines Schritts. Spiellogik merkt sie sich im Zuhörer und führt sie im nächsten `schritt` aus, damit alles reproduzierbar bleibt.
+- Die Spielschleife sendet `spiel:pausiert` und `spiel:fortgesetzt` selbst, wenn sie anhält oder weiterläuft (Tab verborgen, Pausenmenü). Auf `absicht:spiel-pausieren` pausiert sie mit dem Grund `'menue'`; fortgesetzt wird mit `engine.schleife.fortsetzen('menue')`.
+
+### 9.4 Einen Text holen
+
+```ts
+// src/content/texte.ts (nur ergänzen):
+'beute.gold': '+{menge} Gold',
+
+// irgendwo in game, ui, fx:
+import { t } from '@engine/index';
+t('beute.gold', { menge: 37 }); // „+37 Gold“, Zahlen deutsch formatiert („1.234,5“)
+```
+
+Ein fehlender Schlüssel ergibt `⟦beute.gold⟧` und eine Warnung in der Konsole, nie einen Absturz. `main.ts` registriert die Tabelle beim Start; Tests rufen selbst `registriereTexte(texte)` auf.
+
+### 9.5 Die Grafikstufe abfragen
+
+```ts
+import { aktuelleGrafikstufe } from '@engine/index';
+
+let funkenProTreffer = aktuelleGrafikstufe() === 'niedrig' ? 8 : 24;
+welt.bus.an('grafikstufe:geaendert', ({ stufe }) => {
+  funkenProTreffer = stufe === 'niedrig' ? 8 : 24;
+});
+```
+
+Umschalten: Taste F4, `engine.renderer.setzeStufe('hoch')` oder `bus.aus('grafikstufe:geaendert', { stufe: 'hoch' })`. Was jede Stufe einstellt, steht in `STUFEN_EINSTELLUNGEN`. Startstufe für Tests: `?grafik=niedrig`.
+
+### 9.6 Rendern und Interpolieren
+
+```ts
+rendern(welt, anteil) {
+  for (const gegner of welt.entitaeten.mitMarke('gegner')) {
+    const mesh = meshes.get(gegner.id); // eigene Map<EntitaetId, Mesh>
+    interpolierePosition(gegner, anteil, ort); // zwischen letztem und aktuellem Schritt
+    mesh.position.set(ort.x, ort.y, ort.z);
+    mesh.rotation.y = interpoliereBlickrichtung(gegner, anteil);
+  }
+  // Meshes, deren ID nicht mehr vorkommt, aus der Szene nehmen.
+}
+```
+
+- Die Szene ist `engine.renderer.szene`, die Kamera `engine.kamera`.
+- Wer eine Entität versetzt (Wiederbeleben, Rast), nutzt `teleportiere(entitaet, position)`, sonst gleitet sie ein Bild lang durch die Welt.
+- Transparente Effekte (Partikel, Sprites) kommen auf `EBENE_EFFEKTE`: `objekt.layers.set(EBENE_EFFEKTE)`. Dann zeichnet die Umgebungsverdeckung keine dunklen Ränder darum.
+- Kamera wackeln lassen: `bus.aus('kamera:wackeln', { staerke: 0.2, dauer: 0.3 })` (Meter, Sekunden).
+- Lichter nicht pro Geschoss anlegen und entfernen: Jede Änderung der Lichtzahl kompiliert alle Shader neu und ruckelt.
+
+### 9.7 Eingabe
+
+- `eingabe.zustand` ist pro Schritt eingefroren: `gehalten('ausweichen')`, `gedrueckt('zauber-primaer')` (Flanke, geht auch bei kurzen Tippern nicht verloren), `losgelassen(…)`.
+- `zustand.bewegung` ist die WASD-Richtung auf dem Boden (W = −z, D = +x, diagonal normiert), `zustand.ziel` der Punkt unter der Maus auf der Ebene in Höhe `eingabe.zielHoehe` (Standard 0).
+- Für Dinge, die auch in der Pause wirken müssen (Escape-Menü): `eingabe.beiAktion('menue', () => …)`.
+- Umbelegen (Aufgabe 3.2): `eingabe.belegen('ausweichen', ['ShiftLeft'])`, `eingabe.belegung`, `belegungZuruecksetzen()`. Tasten sind `KeyboardEvent.code`-Werte, Maustasten `MausLinks`, `MausRechts`, `MausMitte`.
+
+### 9.8 Testen ohne Browser
+
+```ts
+const welt = erzeugeWelt({ seed: 42 });
+const simulation = new Simulation(welt);
+const eingabe = new Eingabe();
+simulation.hinzufuegen(erzeugeEingabeSystem(eingabe));
+simulation.hinzufuegen(erzeugeSpielerSystem(eingabe));
+eingabe.tasteRunter('KeyW');
+eingabe.setzeZiel(vec3(5, 0, 0)); // statt Maus
+simulation.schritte(60); // genau eine Sekunde Spielzeit
+```
+
+Mit `ManuelleUhr` lässt sich auch die `Spielschleife` bildgenau treiben (`uhr.bild(16.7)`). Im Browser (Dev-Modus oder `?debug`) gibt es `window.__zauberstaebe` mit `welt`, `schritt`, `bilder`, `seed`, `grafikstufe`, `spieler()`, `entitaeten()`, `ereignisse()`, `fehlerbericht()` und `simuliere(n)`. Nur lesen: Wer dort Zustand ändert, macht den Lauf unreproduzierbar.
