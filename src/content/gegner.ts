@@ -1,0 +1,146 @@
+/**
+ * Gegner von Gebiet 1: Wolf, Warg, Irrlicht und der Boss Grimmzahn.
+ *
+ * Die Werte sind ein erster Wurf auf Stufe 1 bis 4 (Aufgabe 3.4 stimmt sie
+ * mit einer Simulation ab). Zeiten in Sekunden, Strecken in Metern.
+ *
+ * Grimmzahn wechselt bei 66 % und 33 % Leben in eine neue Phase und ruft das
+ * Rudel; unter 25 % verfällt er in Raserei (siehe `PLAN.md`, Abschnitt 1).
+ */
+import type { Gegner, GegnerArt } from './typen';
+
+export const GEGNER = {
+  wolf: {
+    id: 'wolf',
+    nameSchluessel: 'gegner.wolf.name',
+    beschreibungSchluessel: 'gegner.wolf.beschreibung',
+    stufe: 1,
+    leben: 32,
+    schaden: 7,
+    element: 'physisch',
+    angriffsabklingzeit: 1.1,
+    angriffsreichweite: 1.6,
+    tempo: 5.6,
+    gehtempo: 2.0,
+    sichtweite: 14,
+    radius: 0.55,
+    ep: 15,
+    beute: [
+      { art: 'gold', chance: 0.6, menge: [2, 6] },
+      { art: 'trank', trank: 'leben', chance: 0.08 },
+      { art: 'zauberstab', chance: 0.04, stufe: 1 },
+    ],
+    ki: 'wolf-rudel',
+  },
+  warg: {
+    id: 'warg',
+    nameSchluessel: 'gegner.warg.name',
+    beschreibungSchluessel: 'gegner.warg.beschreibung',
+    stufe: 2,
+    leben: 110,
+    schaden: 14,
+    element: 'physisch',
+    angriffsabklingzeit: 1.6,
+    angriffsreichweite: 2.0,
+    tempo: 4.4,
+    gehtempo: 1.8,
+    sichtweite: 16,
+    radius: 0.85,
+    ep: 45,
+    beute: [
+      { art: 'gold', chance: 0.8, menge: [6, 14] },
+      { art: 'material', material: 'wargzahn', chance: 0.25, menge: [1, 1] },
+      { art: 'trank', trank: 'leben', chance: 0.12 },
+      { art: 'trank', trank: 'mana', chance: 0.1 },
+      { art: 'zauberstab', chance: 0.1, stufe: 2 },
+    ],
+    ki: 'warg-ansturm',
+    effektdauerFaktoren: { einfrieren: 0.6 },
+    ansturm: { tempo: 9.5, anlauf: 0.7, schaden: 22, abklingzeit: 6 },
+  },
+  irrlicht: {
+    id: 'irrlicht',
+    nameSchluessel: 'gegner.irrlicht.name',
+    beschreibungSchluessel: 'gegner.irrlicht.beschreibung',
+    stufe: 2,
+    leben: 40,
+    schaden: 9,
+    element: 'arkan',
+    angriffsabklingzeit: 2.2,
+    angriffsreichweite: 12,
+    tempo: 3.2,
+    gehtempo: 1.4,
+    sichtweite: 18,
+    radius: 0.45,
+    ep: 25,
+    beute: [
+      { art: 'gold', chance: 0.7, menge: [4, 10] },
+      { art: 'trank', trank: 'mana', chance: 0.2 },
+      { art: 'zauberstab', chance: 0.12, stufe: 2 },
+    ],
+    ki: 'irrlicht-schuetze',
+    effektdauerFaktoren: { brennen: 0 },
+    fernkampf: { geschosstempo: 9, bevorzugterAbstand: 8, schwebehoehe: 1.2 },
+  },
+  grimmzahn: {
+    id: 'grimmzahn',
+    nameSchluessel: 'gegner.grimmzahn.name',
+    beschreibungSchluessel: 'gegner.grimmzahn.beschreibung',
+    stufe: 4,
+    leben: 900,
+    schaden: 26,
+    element: 'physisch',
+    angriffsabklingzeit: 2.4,
+    angriffsreichweite: 3.0,
+    tempo: 5.0,
+    gehtempo: 2.2,
+    sichtweite: 30,
+    radius: 1.3,
+    ep: 300,
+    beute: [
+      { art: 'einzigartig', stab: 'aschenfang', chance: 1 },
+      { art: 'material', material: 'wargzahn', chance: 1, menge: [1, 1] },
+      { art: 'gold', chance: 1, menge: [60, 90] },
+    ],
+    ki: 'boss-grimmzahn',
+    effektdauerFaktoren: { einfrieren: 0.4, brennen: 0.7 },
+    boss: {
+      titelSchluessel: 'gegner.grimmzahn.titel',
+      phasen: [
+        { phase: 2, lebenAnteil: 0.66, angriff: 'rudelruf' },
+        { phase: 3, lebenAnteil: 0.33, angriff: 'rudelruf' },
+        { phase: 4, lebenAnteil: 0.25, angriff: 'raserei' },
+      ],
+      angriffe: {
+        prankenhieb: {
+          nameSchluessel: 'boss.prankenhieb.name',
+          schaden: 28,
+          abklingzeit: 3.0,
+          ankuendigung: 0.9,
+          laenge: 4.5,
+          oeffnungswinkel: 1.4,
+        },
+        sprungangriff: {
+          nameSchluessel: 'boss.sprungangriff.name',
+          schaden: 40,
+          abklingzeit: 8,
+          ankuendigung: 1.3,
+          flugdauer: 0.6,
+          radius: 3.5,
+          maxSprungweite: 12,
+        },
+        rudelruf: {
+          nameSchluessel: 'boss.rudelruf.name',
+          ankuendigung: 1.5,
+          gegner: [{ art: 'wolf', anzahl: 2 }],
+        },
+        raserei: {
+          nameSchluessel: 'boss.raserei.name',
+          tempoFaktor: 1.3,
+          abklingzeitFaktor: 0.7,
+          schadenFaktor: 1.15,
+        },
+      },
+    },
+  },
+} as const satisfies Record<GegnerArt, Gegner>;

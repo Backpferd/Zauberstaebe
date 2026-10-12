@@ -7,7 +7,17 @@
  *
  * Platzhalter in geschweiften Klammern (`{wert}`) füllt `t()` aus `@engine/index`.
  */
+import { texteKampf } from './texte-kampf';
+import { texteStab } from './texte-stab';
+import { texteWelt } from './texte-welt';
+
 export const texte = {
+  // Inhalte von Gebiet 1 (Aufgabe 1.5), aufgeteilt in eigene Dateien:
+  // Zauberstäbe und Affixe, Kampf und Beute, Welt und Ablauf.
+  ...texteStab,
+  ...texteKampf,
+  ...texteWelt,
+
   // Debug-Werkzeuge (Engine, F3/F4/F8)
   'debug.bildrate': 'Bildrate: {wert} FPS',
   'debug.drawcalls': 'Draw-Calls: {wert}',
