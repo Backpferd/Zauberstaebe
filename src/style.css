@@ -25,3 +25,42 @@ body {
   height: 100%;
   display: block;
 }
+
+/* Debug-Werkzeuge der Engine (F3-Anzeige, Meldungen von F4 und F8) */
+#debug-anzeige {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 1000;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: rgb(6 10 14 / 78%);
+  color: #e8f0e0;
+  font:
+    12px/1.45 ui-monospace,
+    'Cascadia Mono',
+    Consolas,
+    monospace;
+  white-space: pre;
+  pointer-events: none;
+  user-select: none;
+}
+
+#debug-anzeige[hidden],
+.debug-meldung[hidden] {
+  display: none;
+}
+
+.debug-meldung {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  z-index: 1001;
+  transform: translateX(-50%);
+  padding: 8px 14px;
+  border-radius: 4px;
+  background: rgb(6 10 14 / 85%);
+  color: #f4ecd8;
+  font: 14px/1.4 var(--schrift-text);
+  pointer-events: none;
+}
