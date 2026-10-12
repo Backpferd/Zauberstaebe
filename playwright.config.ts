@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 5173;
+// Eigener Port je Arbeitskopie, damit parallel arbeitende Agenten nicht
+// versehentlich den Dev-Server einer anderen Arbeitskopie testen.
+const PORT = Number(process.env['PORT'] ?? 5173);
 // Entspricht der `base` in vite.config.ts.
 const BASIS = '/Zauberstaebe/';
 

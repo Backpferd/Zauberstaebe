@@ -27,7 +27,8 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
   },
   server: {
-    port: 5173,
+    // PORT erlaubt mehrere Arbeitskopien gleichzeitig (jeder Agent eigener Port).
+    port: Number(process.env['PORT'] ?? 5173),
     strictPort: true,
   },
   test: {
