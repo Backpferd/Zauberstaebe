@@ -5,6 +5,7 @@
  * die Figur blickt zur Maus, die Kamera folgt, ein Linksklick schießt eine
  * leuchtende Kugel. Es gibt bewusst keine Kollision (Aufgabe 1.1).
  *
+ * Aufruf: ?szene=testszene (Standard, solange es kein Spiel gibt).
  * Ab Welle 1 ersetzen Spieler (1.1) und Gebiet (1.2) diese Datei.
  */
 import {
@@ -55,7 +56,9 @@ const BLOECKE: readonly (readonly [number, number, number, number, number, numbe
   [-10, -6, 1.5, 3.2, 1.5, 0.7],
 ];
 
-export function baueTestszene(engine: Engine): void {
+export const titel = 'Engine-Testszene (0.3)';
+
+export default function baueTestszene(engine: Engine): void {
   const { renderer, welt, kamera, eingabe, audio } = engine;
   const szene = renderer.szene;
 

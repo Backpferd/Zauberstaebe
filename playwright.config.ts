@@ -7,7 +7,10 @@ const BASIS = '/Zauberstaebe/';
 export default defineConfig({
   testDir: 'tests/e2e',
   outputDir: 'test-results',
-  fullyParallel: true,
+  // Software-WebGL (SwiftShader) rechnet komplett auf der CPU. Mehrere Browser
+  // gleichzeitig drücken die Bildrate unter 1 FPS, Echtzeit-Prüfungen scheitern dann.
+  fullyParallel: false,
+  workers: 1,
   forbidOnly: !!process.env['CI'],
   retries: process.env['CI'] ? 1 : 0,
   reporter: process.env['CI'] ? [['list'], ['html', { open: 'never' }]] : 'list',

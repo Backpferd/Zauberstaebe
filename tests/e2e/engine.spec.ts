@@ -5,7 +5,9 @@ import { expect, test, type Page } from '@playwright/test';
 test.describe.configure({ timeout: 90_000 });
 
 /** Lädt die Seite und wartet, bis das erste Bild steht. Sammelt Konsolenfehler. */
-async function laden(page: Page, adresse = './'): Promise<string[]> {
+// Standard ist Grafikstufe niedrig: Mit AO und Bloom schafft SwiftShader weniger als 1 Bild/s,
+// dann scheitern alle Prüfungen in Echtzeit. Der F4-Test schaltet die Stufen trotzdem alle durch.
+async function laden(page: Page, adresse = './?grafik=niedrig'): Promise<string[]> {
   const fehler: string[] = [];
   page.on('console', (nachricht) => {
     if (nachricht.type() === 'error') fehler.push(`Konsole: ${nachricht.text()}`);
@@ -120,7 +122,7 @@ test('Die Figur blickt zur Maus, ein Klick erzeugt ein Geschoss', async ({ page 
 test('F4 schaltet die Grafikstufe durch', async ({ page }) => {
   // Stufe „hoch“ ist im Software-Renderer der CI sehr langsam.
   test.setTimeout(120_000);
-  const fehler = await laden(page);
+  const fehler = await laden(page, './');
   const stufe = () => page.evaluate(() => window.__zauberstaebe?.grafikstufe);
   // Wartet, bis mit der neuen Stufe wirklich zwei Bilder gezeichnet sind.
   const bilderWeiter = async () => {

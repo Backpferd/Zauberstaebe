@@ -1,6 +1,6 @@
 # Zauberstäbe – Plan bis zum ersten spielbaren Gebiet
 
-> Stand: 06.10.2026 · Status: **freigegeben, Welle 0 läuft**
+> Stand: 06.10.2026 · Status: **Welle 0 fertig, Welle 1 läuft**
 > Ziel: ein kleines, komplett spielbares Gebiet (ca. 10–15 Minuten Spielzeit), das du im Browser testen kannst.
 > Deine Antworten auf Abschnitt 8 sind eingearbeitet (siehe dort und in `CLAUDE.md`).
 
@@ -283,7 +283,7 @@ Am 06.10.2026 beantwortet, alles eingearbeitet:
 | --- | --- | --- |
 | **Plan** | freigegeben | Welle 0 gestartet |
 | **Steuerung** | **WASD + Maus zielen**, Leertaste ausweichen | Aufgabe 1.1 baut nur dieses Schema, kein Klick-zum-Laufen |
-| **Oberfläche** | Vorbilder **WoW Classic** und **Diablo 4** | Aufgabe 0.5 liefert drei Varianten: A „Classic“ (WoW), B „Modern“ (D4), C „Wildholz“ (eigene Mischung). Du wählst eine, daraus wird der Stilleitfaden für 2.3, 2.4, 2.5 und 3.2 |
+| **Oberfläche** | Vorbilder **WoW Classic** und **Diablo 4**, aus drei Entwürfen am 12.10.2026 **Variante C „Wildholz“** gewählt | Stilleitfaden in `docs/stilleitfaden.md`, verbindlich für 2.3, 2.4, 2.5 und 3.2 |
 | **Namen** | übernommen | Dorf **Erlengrund**, Berge **Grauzahn-Pass**, Wald **Wildholz**, Boss **Grimmzahn** |
 | **Testlink & Merge** | ich mache alles selbst, volle Berechtigung | GitHub Pages richte ich ein, fertige Wellen führe ich selbst nach `main` zusammen, keine Rückfrage pro Welle |
 
@@ -291,7 +291,7 @@ Am 06.10.2026 beantwortet, alles eingearbeitet:
 
 Nur noch Rückmeldung, kein Einrichten mehr:
 
-1. **Eine der drei UI-Varianten auswählen**, sobald die Screenshots aus Aufgabe 0.5 vorliegen.
+1. ✅ ~~Eine der drei UI-Varianten auswählen~~: Variante C „Wildholz“ (12.10.2026)
 2. **Mini-Test nach Welle 1** (optional): durchs Gebiet laufen, Steuerung und Look prüfen.
 3. **Mini-Test nach Welle 2**: kämpfen, Beute sammeln, Inventar ausprobieren.
 4. **Testlauf nach Welle 4** mit Fehlerliste.

@@ -23,20 +23,21 @@ Dieses Dokument legt fest, wie das Spiel aufgebaut ist, wer welchen Ordner besit
 
 Jeder Ordner hat **genau einen** zuständigen Agenten pro Welle. Fremde Ordner werden nicht angefasst — auch nicht „nur kurz".
 
-| Ordner         | Inhalt                                                                                                                                               | Darf importieren aus                |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| `src/engine/`  | Spielschleife, Zeit, Ereignisbus, Entitäten, Eingabe, Kamera, Renderer, Licht und Schatten, Audio-Grundlage, Seed-Zufall, Texttabelle, Debug (F3/F8) | – (nur Three.js und eigene Dateien) |
-| `src/content/` | Alle Daten und Texte: Zauberstäbe, Affixe, Seltenheiten, Zauber, Gegner, Quest, Begegnungen, Stufenkurven                                            | – (reine Daten, keine Logik)        |
-| `src/models/`  | Prozedurale 3D-Modelle und ihre Animationen: Zauberer, Wolf, Warg, Irrlicht, Grimmzahn, Requisiten                                                   | `engine`                            |
-| `src/fx/`      | Partikel, Zauber- und Treffereffekte, Warnmarkierungen am Boden, Bildschirmwackeln                                                                   | `engine`                            |
-| `src/world/`   | Gelände, Wege, Vegetation, Kollision, Wegfindung, Aufbau von Gebiet 1, Begegnungszonen                                                               | `engine`, `content`, `models`       |
-| `src/game/`    | Spiellogik: Spieler, Kampf, Zauber, Gegner-KI, Boss, Beute, Inventar, Quests, Fortschritt, Spielstand                                                | `engine`, `content`, `world`        |
-| `src/ui/`      | HUD, Fenster, Menüs als HTML/CSS über der 3D-Ebene                                                                                                   | `engine`, `content`                 |
-| `tests/unit/`  | Logiktests (Vitest)                                                                                                                                  | alles                               |
-| `tests/e2e/`   | Browsertests und Testbot (Playwright)                                                                                                                | –                                   |
-| `docs/`        | Architektur und Spieldesign                                                                                                                          | –                                   |
-| `konzept/`     | **Eingefroren.** Die Konzeptszene bleibt als Referenz, wird nicht mehr geändert.                                                                     | –                                   |
-| `ui-stile/`    | **Eingefroren** nach Aufgabe 0.5. Die drei Stilentwürfe bleiben als Referenz.                                                                        | –                                   |
+| Ordner          | Inhalt                                                                                                                                               | Darf importieren aus                |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| `src/engine/`   | Spielschleife, Zeit, Ereignisbus, Entitäten, Eingabe, Kamera, Renderer, Licht und Schatten, Audio-Grundlage, Seed-Zufall, Texttabelle, Debug (F3/F8) | – (nur Three.js und eigene Dateien) |
+| `src/content/`  | Alle Daten und Texte: Zauberstäbe, Affixe, Seltenheiten, Zauber, Gegner, Quest, Begegnungen, Stufenkurven                                            | – (reine Daten, keine Logik)        |
+| `src/models/`   | Prozedurale 3D-Modelle und ihre Animationen: Zauberer, Wolf, Warg, Irrlicht, Grimmzahn, Requisiten                                                   | `engine`                            |
+| `src/fx/`       | Partikel, Zauber- und Treffereffekte, Warnmarkierungen am Boden, Bildschirmwackeln                                                                   | `engine`                            |
+| `src/world/`    | Gelände, Wege, Vegetation, Kollision, Wegfindung, Aufbau von Gebiet 1, Begegnungszonen                                                               | `engine`, `content`, `models`       |
+| `src/game/`     | Spiellogik: Spieler, Kampf, Zauber, Gegner-KI, Boss, Beute, Inventar, Quests, Fortschritt, Spielstand                                                | `engine`, `content`, `world`        |
+| `src/ui/`       | HUD, Fenster, Menüs als HTML/CSS über der 3D-Ebene                                                                                                   | `engine`, `content`                 |
+| `src/vorschau/` | Vorschauseiten zum Testen einzelner Bausteine, je Agent **eine eigene Datei** (Abschnitt 10)                                                         | alles                               |
+| `tests/unit/`   | Logiktests (Vitest)                                                                                                                                  | alles                               |
+| `tests/e2e/`    | Browsertests und Testbot (Playwright)                                                                                                                | –                                   |
+| `docs/`         | Architektur und Spieldesign                                                                                                                          | –                                   |
+| `konzept/`      | **Eingefroren.** Die Konzeptszene bleibt als Referenz, wird nicht mehr geändert.                                                                     | –                                   |
+| `ui-stile/`     | **Eingefroren** nach Aufgabe 0.5. Die drei Stilentwürfe bleiben als Referenz.                                                                        | –                                   |
 
 **Abhängigkeitsrichtung** (nur von links nach rechts):
 
@@ -309,11 +310,12 @@ export interface Affix {
 
 1. **Nur den eigenen Ordner ändern.** Brauchst du etwas in einem fremden Ordner: nicht selbst bauen, sondern im Abschlussbericht melden.
 2. **Gemeinsame Dateien** (`src/engine/ereignisse.ts`, `src/content/texte.ts`, `package.json`) sind Konfliktzonen. Dort nur ergänzen, nie umsortieren oder umformatieren.
-3. **Vor der Abgabe müssen laufen:** `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`. Bei sichtbaren Änderungen zusätzlich Screenshots.
-4. **Keine neuen Abhängigkeiten** ohne Nennung im Bericht, mit Begründung.
-5. **Kein `Math.random()`, kein `Date.now()`** in der Spiellogik — nur `welt.zufall` und `welt.zeit`.
-6. **Kein fest verdrahteter deutscher Text** in `src/engine/`, `src/game/`, `src/world/`, `src/fx/` — alles über `t()` aus `src/content/texte.ts`.
-7. Beim Umgang mit Three.js: Geometrien und Materialien wiederverwenden, bei vielen gleichen Objekten `InstancedMesh`. Das Leistungsbudget legt Aufgabe 3.5 fest.
+3. **Vor der Abgabe müssen laufen:** `npm run lint`, `npm run format:check`, `npm run typecheck`, `npm test`, `npm run build` und `npm run test:e2e`. Bei sichtbaren Änderungen zusätzlich Screenshots.
+4. **`src/main.ts` fasst in Welle 1 und 2 niemand an.** Dein Baustein wird über eine eigene Vorschauseite gezeigt (Abschnitt 10). Das Zusammenstecken zum Spiel macht die Hauptsitzung.
+5. **Keine neuen Abhängigkeiten** ohne Nennung im Bericht, mit Begründung.
+6. **Kein `Math.random()`, kein `Date.now()`** in der Spiellogik — nur `welt.zufall` und `welt.zeit`.
+7. **Kein fest verdrahteter deutscher Text** in `src/engine/`, `src/game/`, `src/world/`, `src/fx/` — alles über `t()` aus `src/content/texte.ts`.
+8. Beim Umgang mit Three.js: Geometrien und Materialien wiederverwenden, bei vielen gleichen Objekten `InstancedMesh`. Das Leistungsbudget legt Aufgabe 3.5 fest.
 
 ---
 
@@ -510,3 +512,29 @@ simulation.schritte(60); // genau eine Sekunde Spielzeit
 ```
 
 Mit `ManuelleUhr` lässt sich auch die `Spielschleife` bildgenau treiben (`uhr.bild(16.7)`). Im Browser (Dev-Modus oder `?debug`) gibt es `window.__zauberstaebe` mit `welt`, `schritt`, `bilder`, `seed`, `grafikstufe`, `spieler()`, `entitaeten()`, `ereignisse()`, `fehlerbericht()` und `simuliere(n)`. Nur lesen: Wer dort Zustand ändert, macht den Lauf unreproduzierbar.
+
+---
+
+## 10. Vorschauseiten
+
+Damit jeder Baustein im Browser prüfbar ist, ohne dass parallel arbeitende Agenten dieselbe Datei ändern, gibt es Vorschauseiten.
+
+- Jede Datei `src/vorschau/<name>.ts` ist über `?szene=<name>` erreichbar, zum Beispiel `http://localhost:5173/Zauberstaebe/?szene=spieler`.
+- Ohne `?szene=` startet `testszene`. Ein unbekannter Name fällt mit einer Warnung in der Konsole auf `testszene` zurück.
+- Eine Vorschau exportiert eine Standardfunktion und optional einen Titel:
+
+```ts
+import type { Engine } from '@engine/index';
+
+export const titel = 'Spielerfigur (1.1)';
+
+export default function (engine: Engine): void {
+  // Szene aufbauen, Systeme mit engine.systemHinzufuegen(…) anmelden.
+  // engine.starten() ruft main.ts danach selbst auf.
+}
+```
+
+- **Jeder Agent legt nur seine eigene Datei an** und benennt sie nach seinem Baustein. Fremde Vorschauen werden nicht geändert.
+- Vorschauseiten sind Entwicklerwerkzeuge. Sie dürfen aus allen Ordnern importieren und fest verdrahtete deutsche Texte enthalten. Spiellogik gehört aber nicht hierher, sondern in den zuständigen Ordner.
+- Vite lädt jede Vorschau als eigene Datei nach. Im fertigen Spiel kosten sie deshalb nichts.
+- Browsertests laden eine Vorschau mit `page.goto('./?szene=<name>&grafik=niedrig')`. **Echtzeit-Prüfungen immer mit `grafik=niedrig`**: Der Software-Renderer der Tests schafft mit AO und Bloom weniger als ein Bild pro Sekunde.

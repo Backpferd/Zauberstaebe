@@ -9,7 +9,7 @@ test('Die Seite lädt, zeichnet die Testszene und meldet keine Konsolenfehler', 
   page.on('pageerror', (error) => fehler.push(`Seitenfehler: ${error.message}`));
 
   await page.goto('./');
-  await expect(page).toHaveTitle('Zauberstäbe');
+  await expect(page).toHaveTitle(/Zauberstäbe$/);
 
   const leinwand = page.locator('canvas#spiel');
   await expect(leinwand).toBeVisible();
